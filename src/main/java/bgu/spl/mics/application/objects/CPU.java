@@ -17,19 +17,7 @@ public class CPU {
         data= new LinkedList<DataBatch>();
         cluster=cluster.getInstance();
     }
-    public void addData(DataBatch anotherData){
-        data.add(anotherData);
-
+    public boolean ProcessData(){
+       return true;
     }
-
-    public void imageProcessData(DataBatch DataToProcess){ //culculate time for image
-    }
-    public void textProcessData(DataBatch DataToProcess){ //culculate time for text
-
-    }
-    public void TabularProcessData(DataBatch DataToProcess){ ////culculate time for tabular
-
-    }
-
-
 }
