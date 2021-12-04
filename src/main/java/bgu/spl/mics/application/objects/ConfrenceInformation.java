@@ -8,4 +8,8 @@ public class ConfrenceInformation {
 
     private String name;
     private int date;
+    public ConfrenceInformation(String _name,int _date){
+        date=_date;
+        name=_name;
+    }
 }

@@ -18,4 +18,11 @@ public class Student {
     private int publications;
     private int papersRead;
 
+    public Student(int _name, String _department, Degree _status){
+        name = _name;
+        department = _department;
+        status = _status;
+        publications = 0;
+        papersRead = 0;
+    }
 }
