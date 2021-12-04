@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -104,5 +105,10 @@ public interface MessageBus {
      *                              to became available.
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
-    
+    <T>boolean checkSub(Class<? extends Event<T>> eventType, MicroService micro);
+    <T>boolean checkSubBroad(Class<? extends Broadcast> eventType, MicroService micro);
+    boolean hasBro(Broadcast bro, MicroService micro);
+    <T> boolean conEvent(Event<T> event, MicroService micro);
+    boolean registerIsTrue(MicroService micro);
+
 }

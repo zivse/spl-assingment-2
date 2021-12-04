@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -8,20 +9,11 @@ import java.util.HashMap;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	private HashMap events; //for tests
-	private HashMap broadcast; //for tests
-	private HashMap messages; //for tests
-	public HashMap getEvents(){ //for tests
-		return events;
-	}
-	public HashMap getBroadcast(){ //for tests
-		return broadcast;
-	}
-	public HashMap getMessages(){ //for tests
-		return messages;
-	}
+	private HashMap<Class<? extends Message>, Vector<MicroService>> microServices;
+	private HashMap <Message, Future>  futers;
+	private HashMap<MicroService , Vector<Message>> messages;
 
-	@Override
+		@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		// TODO Auto-generated method stub
 
@@ -70,6 +62,21 @@ public class MessageBusImpl implements MessageBus {
 		return null;
 	}
 
-	
+	public<T>boolean checkSub(Class<? extends Event<T>> eventType, MicroService micro){
+		return messages.get(eventType).contains(micro);
+	}
+	public<T>boolean checkSubBroad(Class<? extends Broadcast> eventType, MicroService micro){
+			return microServices.get(eventType).contains(micro);
+	}
+	public boolean hasBro(Broadcast bro, MicroService micro){
+			return microServices.get(micro).contains(bro);
+	}
+	public<T> boolean conEvent(Event<T> event, MicroService micro){
+		return microServices.get(micro).contains(event);
+	}
+	public boolean registerIsTrue(MicroService micro){
+			return messages.containsKey(micro);
+
+	}
 
 }

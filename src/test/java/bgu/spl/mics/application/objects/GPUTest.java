@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GPUTest {
+    private GPU gpu;
 
     @Before
     public void setUp() throws Exception {
@@ -16,14 +17,11 @@ public class GPUTest {
 
     @Test
     public void train1() {
-            GPU gpu=new GPU(GPU.Type.GTX1080);
             assertTrue(gpu.train());
         }
 
-
     @Test
     public void test1() {
-        GPU gpu=new GPU(GPU.Type.GTX1080);
         assertTrue(gpu.test());
     }
 }
