@@ -1,11 +1,25 @@
 package bgu.spl.mics;
 
+import java.util.HashMap;
+
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
  * Write your implementation here!
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
+	private HashMap events; //for tests
+	private HashMap broadcast; //for tests
+	private HashMap messages; //for tests
+	public HashMap getEvents(){ //for tests
+		return events;
+	}
+	public HashMap getBroadcast(){ //for tests
+		return broadcast;
+	}
+	public HashMap getMessages(){ //for tests
+		return messages;
+	}
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {

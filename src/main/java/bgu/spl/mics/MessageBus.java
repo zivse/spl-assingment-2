@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import java.util.HashMap;
+
 /**
  * The message-bus is a shared object used for communication between
  * micro-services.
@@ -10,7 +12,6 @@ package bgu.spl.mics;
  * You cannot add methods to this interface.
  */
 public interface MessageBus {
-
     /**
      * Subscribes {@code m} to receive {@link Event}s of type {@code type}.
      * <p>
@@ -18,7 +19,7 @@ public interface MessageBus {
      * @param type The type to subscribe to,
      * @param m    The subscribing micro-service.
      * @pre type!=null&&m!=null
-     * @post
+     * @post events.size()=@pre events.size()+1
      */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
 
@@ -27,7 +28,10 @@ public interface MessageBus {
      * <p>
      * @param type 	The type to subscribe to.
      * @param m    	The subscribing micro-service.
+     * @pre type!=null&&m!=null
+     * @post broadcast.size()=@pre broadcast.size()+1
      */
+
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
 
     /**
@@ -39,6 +43,8 @@ public interface MessageBus {
      * @param <T>    The type of the result expected by the completed event.
      * @param e      The completed event.
      * @param result The resolved result of the completed event.
+     * @pre e!=null&&result!=null
+     * @post e.getResult()=@param result
      */
     <T> void complete(Event<T> e, T result);
 
@@ -47,9 +53,10 @@ public interface MessageBus {
      * micro-services subscribed to {@code b.getClass()}.
      * <p>
      * @param b 	The message to added to the queues.
+     * @pre b!=null
+     * @post messages=@pre messages+1;
      */
     void sendBroadcast(Broadcast b);
-
     /**
      * Adds the {@link Event} {@code e} to the message queue of one of the
      * micro-services subscribed to {@code e.getClass()} in a round-robin
@@ -59,6 +66,8 @@ public interface MessageBus {
      * @param e     	The event to add to the queue.
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
+     * @pre e!=null
+     * @post events.size()=@pre events.size()+1
      */
     <T> Future<T> sendEvent(Event<T> e);
 
