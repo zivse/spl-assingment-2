@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.services.CPUService;
+import bgu.spl.mics.example.messages.ExampleEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,26 +10,27 @@ import static org.junit.Assert.*;
 
 public class MessageBusImplTest {
 
+    private MessageBus bus;
+    private MicroService m;
+    private ExampleEvent e;
+
     @Before
     public void setUp() throws Exception {
-        MessageBus bus = new  MessageBusImpl();
-        MicroService m= new CPUService("c");
+        bus = new  MessageBusImpl();
+        m = new CPUService("c");
+        e = new ExampleEvent("e");
     }
 
     @Test
     public void subscribeEvent() {
-        MessageBus bus = new  MessageBusImpl();
-        MicroService m= new CPUService("c");
         assertNull(m);
         int size= bus.getEvents().size();
-        subscribeEvent(ExampleEvent,m) ;
+        bus.subscribeEvent(e.getClass(),m) ;
         assertEquals(size+1,bus.getEvents().size());
     }
 
     @Test
     public void subscribeBroadcast() {
-        MessageBus bus = new  MessageBusImpl();
-        MicroService m= new CPUService("c");
         assertNull(m);
         int size= bus.getBroadcast().size();
         subscribeEvent(ExampleEvent,m) ;
@@ -37,9 +39,7 @@ public class MessageBusImplTest {
 
     @Test
     public void complete() {
-        MessageBus bus = new  MessageBusImpl();
-        MicroService m= new CPUService("c");
-        Event x= new <String>ExampleEvent();
+
         complete(x,"result");
         assertEquals("result",x.getResult());
 
@@ -48,8 +48,6 @@ public class MessageBusImplTest {
 
     @Test
     public void sendBroadcast() {
-        MessageBus bus = new  MessageBusImpl();
-        MicroService m= new CPUService("c");
         Broadcast x= new Broadcast() ;
         assertNull(x);
         int size= bus.getBroadcast().size();
