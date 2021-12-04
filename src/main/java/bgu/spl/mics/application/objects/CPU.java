@@ -8,6 +8,7 @@ import java.util.LinkedList;
  * Add all the fields described in the assignment as private fields.
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
+
 public class CPU {
     private int cores; //number of cores
     private LinkedList<DataBatch> data; //the data the cpu currently procssing

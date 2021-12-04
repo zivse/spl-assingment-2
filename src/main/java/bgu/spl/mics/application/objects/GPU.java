@@ -13,4 +13,12 @@ public class GPU {
 
     private Type type;
 
+
+    public boolean train(){
+        return true;
+    }
+    public boolean test(){
+        return true;
+    }
+
 }
