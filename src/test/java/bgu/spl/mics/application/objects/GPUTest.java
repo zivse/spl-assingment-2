@@ -1,10 +1,9 @@
 package bgu.spl.mics.application.objects;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GPUTest {
@@ -16,12 +15,20 @@ public class GPUTest {
     }
 
     @Test
-    public void train1() {
-            assertTrue(gpu.train());
-        }
-
+    public void divideData(){
+        DataBatch a= gpu.divideData();
+        assertTrue(gpu.isSmaller1000(a));
+    }
     @Test
-    public void test1() {
-        assertTrue(gpu.test());
+    public void getDataFromCluster(){
+        Data data=new Data();
+        gpu.getDataFromCluster(data);
+        Data test=gpu.getData();
+        assertEquals(data,test);
+    }
+    @Test
+    public void trainDataT(){
+        assertTrue(gpu.trainData());
+
     }
 }

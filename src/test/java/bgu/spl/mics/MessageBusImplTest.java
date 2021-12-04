@@ -12,60 +12,60 @@ import static org.junit.Assert.*;
 public class MessageBusImplTest {
 
     private MessageBus bus;
-    private MicroService m;
-    private ExampleEvent e;
+    private MicroService ms1;
+    private ExampleEvent ev;
     private ExampleBroadcast bro;
     private Future<Integer> future;
 
     @Before
     public void setUp() throws Exception {
+        ms1 = new CPUService("c");
+        ev = new ExampleEvent("e");
         bus = new  MessageBusImpl();
-        m = new CPUService("c");
-        e = new ExampleEvent("e");
-        bus.register(m); //register the microservice before all the tests.
+        bus.register(ms1); //register the microservice before all the tests.
     }
 
     @Test
     public void subscribeEvent() {
-        bus.subscribeEvent(e.getClass(),m);
-        assertTrue(bus.checkSub(e.getClass(),m));
+        bus.subscribeEvent(ev.getClass(),ms1);
+        assertTrue(bus.checkIsReallyAddedSub(ev.getClass(),ms1));
     }
 
     @Test
     public void subscribeBroadcast() {
-        bus.subscribeBroadcast(bro.getClass(), m);
-        assertTrue(bus.checkSubBroad(bro.getClass(),m));
+        bus.subscribeBroadcast(bro.getClass(), ms1);
+        assertTrue(bus.checkisReallyAddedSubBroad(bro.getClass(),ms1));
     }
-
+    @Test
+    public void sendBroadcast() {
+        bus.subscribeBroadcast(bro.getClass(),ms1);
+        bus.sendBroadcast(bro);
+        assertTrue(bus.hasBro(bro,ms1));
+    }
     @Test
     public void complete() {
        future.resolve(10);//give future some default value
        assertTrue(future.isDone());
     }
 
-    @Test
-    public void sendBroadcast() {
-        bus.subscribeBroadcast(bro.getClass(),m);
-        bus.sendBroadcast(bro);
-        assertTrue(bus.hasBro(bro,m));
-    }
+
 
     @Test
     public void sendEvent() {
-        bus.subscribeEvent(e.getClass(),m);
-        bus.sendEvent(e);
-        assertTrue(bus.conEvent(e,m)); //check if the event has sent
+        bus.subscribeEvent(ev.getClass(),ms1);
+        bus.sendEvent(ev);
+        assertTrue(bus.conEvent(ev,ms1)); //check if the event has sent
     }
 
     @Test
     public void register() { //we register m on the before
-        assertTrue(bus.registerIsTrue(m));
+        assertTrue(bus.registerIsTrue(ms1));
     }
 
     @Test
     public void unregister() {
-        bus.unregister(m);
-        assertFalse(bus.registerIsTrue(m));
+        bus.unregister(ms1);
+        assertFalse(bus.registerIsTrue(ms1));
     }
 
     @Test

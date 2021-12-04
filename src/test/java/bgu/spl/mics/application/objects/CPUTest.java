@@ -1,7 +1,6 @@
 package bgu.spl.mics.application.objects;
 
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,6 +15,22 @@ class CPUTest {
 
     @Test
     void processDataT() {
-        assertTrue(cpu.ProcessData());
+        DataBatch check= new DataBatch();
+        assertEquals(check,cpu.ProcessData(check));
     }
+
+    @Test
+    void updateTime(){
+        int time = cpu.getTime();
+        cpu.updateTime();
+        assertEquals(time+1,cpu.getTime());
+    }
+    @Test
+    public void addedUnProcessedData(){
+        DataBatch check= new DataBatch();
+        assertNull(check);
+        cpu.addUnProcessedData(check);
+        assertTrue(cpu.isAddedData(check));
+    }
+
 }

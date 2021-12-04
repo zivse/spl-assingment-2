@@ -55,17 +55,18 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 
 	}
-
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public<T>boolean checkSub(Class<? extends Event<T>> eventType, MicroService micro){
+	public<T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro){
 		return messages.get(eventType).contains(micro);
 	}
-	public<T>boolean checkSubBroad(Class<? extends Broadcast> eventType, MicroService micro){
+
+
+
+	public<T>boolean checkisReallyAddedSubBroad(Class<? extends Broadcast> eventType, MicroService micro){
 			return microServices.get(eventType).contains(micro);
 	}
 	public boolean hasBro(Broadcast bro, MicroService micro){

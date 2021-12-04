@@ -20,7 +20,7 @@ public interface MessageBus {
      * @param type The type to subscribe to,
      * @param m    The subscribing micro-service.
      * @pre type!=null&&m!=null
-     * @post events.size()=@pre events.size()+1
+     * @post checkIsReallyAddedSub(typeOfE,MS)==true
      */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
 
@@ -30,7 +30,7 @@ public interface MessageBus {
      * @param type 	The type to subscribe to.
      * @param m    	The subscribing micro-service.
      * @pre type!=null&&m!=null
-     * @post broadcast.size()=@pre broadcast.size()+1
+     * @post checkSubBroad(type,m)==true
      */
 
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
@@ -105,8 +105,8 @@ public interface MessageBus {
      *                              to became available.
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
-    <T>boolean checkSub(Class<? extends Event<T>> eventType, MicroService micro);
-    <T>boolean checkSubBroad(Class<? extends Broadcast> eventType, MicroService micro);
+    <T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro); //check if the que is updated
+    <T>boolean checkisReallyAddedSubBroad(Class<? extends Broadcast> eventType, MicroService micro); //check if the que is updated
     boolean hasBro(Broadcast bro, MicroService micro);
     <T> boolean conEvent(Event<T> event, MicroService micro);
     boolean registerIsTrue(MicroService micro);

@@ -14,20 +14,49 @@ public class GPU {
     private Type type;
     private Model model;
     Cluster cluster;
+    Data unProcessData;
     public GPU(Type _type){
         type = _type;
         model = null;
         cluster=cluster.getInstance();
+        unProcessData=new Data();
     }
-//@pre none
-    //@post true
-    public boolean train(){
+
+    /**
+     *
+     * @return divided data
+     * @pre none
+     * @post isSmaller1000(@param a)==true
+     */
+    public DataBatch divideData(){
+    DataBatch a=new DataBatch();
+return a;
+}
+public boolean isSmaller1000(DataBatch a){
+        return(a.getSize()<1000);
+}
+
+    /**
+     *
+     * @param data
+     * @pre data!=null
+     * @post unProcessData=@param data
+     */
+    public void getDataFromCluster(Data data){
+    unProcessData= data;
+}
+public Data getData(){
+        return unProcessData;
+}
+
+    /**
+     *
+     * @return true if train finished
+     * @pre none
+     * @post none
+     */
+    public boolean trainData(){
         return true;
-    }
-    //@pre none
-    //@post true
-    public boolean test(){
-        return true;
-    }
+}
 
 }
