@@ -19,10 +19,13 @@ public class GPU {
         model = null;
         cluster=cluster.getInstance();
     }
-
+//@pre none
+    //@post true
     public boolean train(){
         return true;
     }
+    //@pre none
+    //@post true
     public boolean test(){
         return true;
     }

@@ -18,6 +18,8 @@ public class CPU {
         data= new LinkedList<DataBatch>();
         cluster=cluster.getInstance();
     }
+    //@pre none
+    //@post none
     public boolean ProcessData(){
        return true;
     }
