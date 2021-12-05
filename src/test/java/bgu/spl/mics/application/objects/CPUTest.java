@@ -10,7 +10,7 @@ class CPUTest {
 
     @Before
     public void setUp() throws Exception {
-        CPU cpu=new CPU(3);
+        cpu=new CPU(3);
     }
 
     @Test

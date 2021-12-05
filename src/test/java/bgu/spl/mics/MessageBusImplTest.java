@@ -59,6 +59,7 @@ public class MessageBusImplTest {
 
     @Test
     public void register() { //we register m on the before
+
         assertTrue(bus.registerIsTrue(ms1));
     }
 
