@@ -68,8 +68,5 @@ public class MessageBusImplTest {
         assertFalse(bus.registerIsTrue(ms1));
     }
 
-    @Test
-    public void awaitMessage() {
 
-    }
 }
