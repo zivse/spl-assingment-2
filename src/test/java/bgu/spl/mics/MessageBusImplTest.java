@@ -3,7 +3,6 @@ package bgu.spl.mics;
 import bgu.spl.mics.application.services.CPUService;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
 import bgu.spl.mics.example.messages.ExampleEvent;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 

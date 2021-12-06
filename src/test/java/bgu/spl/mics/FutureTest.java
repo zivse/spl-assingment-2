@@ -1,10 +1,8 @@
 package bgu.spl.mics;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.After;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 class FutureTest {
     private static Future<String> future;
 
-    @BeforeEach
+    @Before
     void setUp() {
         future=new Future<>();
     }
