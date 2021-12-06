@@ -29,8 +29,8 @@ public class GPU {
      * @post isSmaller1000(@param a)==true
      */
     public DataBatch divideData(){
-    DataBatch a=new DataBatch();
-return a;
+        DataBatch a=new DataBatch();
+        return a;
 }
 public boolean isSmaller1000(DataBatch a){
         return(a.getSize()<1000);
@@ -46,6 +46,7 @@ public boolean isSmaller1000(DataBatch a){
     unProcessData= data;
 }
 public Data getData(){
+
         return unProcessData;
 }
 
@@ -56,6 +57,7 @@ public Data getData(){
      * @post none
      */
     public boolean trainData(){
+
         return true;
 }
 
