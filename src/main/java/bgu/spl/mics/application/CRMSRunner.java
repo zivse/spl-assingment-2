@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 public class CRMSRunner {
     public static void main(String[] args) throws IOException {
 //        JSONArray a = (JSONArray) parser.parse(new FileReader("c:\\exer4-courses.json"));
-        String fileName = "src/main/resources/students.json";
+        String fileName = "/Users/zivseker/Desktop/Projects/assignment2/example_input.json";// from here: https://www.javaguides.net/2019/06/how-to-read-json-file-using-gson-in-java.html
         Path path = Paths.get(fileName);
 
         try (Reader reader = Files.newBufferedReader(path,
@@ -44,8 +44,8 @@ public class CRMSRunner {
                     JsonObject car = element.getAsJsonObject();
 
                     System.out.println("********************");
-                    System.out.println(car.get("studentId").getAsLong());
-                    System.out.println(car.get("studentName").getAsString());
+                    System.out.println(car.get("name").getAsLong());
+                    System.out.println(car.get("department").getAsString());
                 }
             }
         }
