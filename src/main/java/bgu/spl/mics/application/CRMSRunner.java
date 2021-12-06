@@ -1,4 +1,5 @@
 package bgu.spl.mics.application;
+import bgu.spl.mics.application.objects.Model;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -29,38 +30,55 @@ public class CRMSRunner {
         String fileName = "/Users/zivseker/Desktop/Projects/assignment2/example_input.json";// from here: https://www.javaguides.net/2019/06/how-to-read-json-file-using-gson-in-java.html
         Path path = Paths.get(fileName);
 
-        try (Reader reader = Files.newBufferedReader(path,
-                StandardCharsets.UTF_8)) {
-
-            JsonParser parser = new JsonParser();
-            JsonElement tree = parser.parse(reader);
-
-            JsonArray array = tree.getAsJsonArray();
-
-            for (JsonElement element: array) {
-
-                if (element.isJsonObject()) {
-
-                    JsonObject car = element.getAsJsonObject();
-
-                    System.out.println("********************");
-                    System.out.println(car.get("name").getAsLong());
-                    System.out.println(car.get("department").getAsString());
-                }
+        Reader reader = Files.newBufferedReader(path,StandardCharsets.UTF_8);
+        JsonParser parser = new JsonParser();
+        JsonElement tree = parser.parse(reader);
+        JsonObject object = tree.getAsJsonObject();
+        System.out.println(object);
+        JsonArray students = object.get("Students").getAsJsonArray();
+        for(JsonElement studentElement : students){
+            JsonObject studentObject = studentElement.getAsJsonObject();
+            String studentName = studentObject.get("name").getAsString();
+            String studentDepartment = studentObject.get("department").getAsString();
+            String  studentStatus = studentObject.get("status").getAsString();
+            JsonArray models = object.get("models").getAsJsonArray();
+            for(JsonElement model : models){
+                JsonObject modelObject = model.getAsJsonObject();
+                String modelName = modelObject.get("name").getAsString();
+                String modelType = modelObject.get("type").getAsString();
+                int modelSize = modelObject.get("type").getAsInt();
+               // Model tempmodel = new Model()
             }
         }
-    }
+
+
+
+//            JsonArray array = tree.getAsJsonArray();
+//
+//            for (JsonElement element: array) {
+//
+//                if (element.isJsonObject()) {
+//
+//                    JsonObject car = element.getAsJsonObject();
+//
+//                    System.out.println("********************");
+//                    System.out.println(car.get("name").getAsLong());
+//                    System.out.println(car.get("department").getAsString());
+//                }
+//            }
+//        }
 
 
 
 
-    public HashMap<String, String> myMethodName() throws FileNotFoundException //check - from https://stackoverflow.com/questions/29965764/how-to-parse-json-file-with-gson
-    {
-        String path = "absolute path to your file";
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
 
-        Gson gson = new Gson();
-        HashMap<String, String> json = gson.fromJson(bufferedReader, HashMap.class);
-        return json;
-    }
-}
+//    public HashMap<String, String> myMethodName() throws FileNotFoundException //check - from https://stackoverflow.com/questions/29965764/how-to-parse-json-file-with-gson
+//    {
+//        String path = "absolute path to your file";
+//        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+//
+//        Gson gson = new Gson();
+//        HashMap<String, String> json = gson.fromJson(bufferedReader, HashMap.class);
+//        return json;
+//    }
+}}
