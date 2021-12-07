@@ -1,11 +1,12 @@
 package bgu.spl.mics.application;
 import bgu.spl.mics.application.objects.Model;
+import bgu.spl.mics.application.objects.Student;
+import bgu.spl.mics.application.objects.Data;
+import bgu.spl.mics.application.services.StudentService;
 import com.google.gson.Gson;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
-
 import java.io.FileReader;
 import java.util.Iterator;
 import com.google.gson.JsonArray;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Vector;
 
 /** This is the Main class of Compute Resources Management System application. You should parse the input file,
  * create the different instances of the objects, and run the system.
@@ -26,59 +28,36 @@ import java.nio.file.Paths;
  */
 public class CRMSRunner {
     public static void main(String[] args) throws IOException {
-//        JSONArray a = (JSONArray) parser.parse(new FileReader("c:\\exer4-courses.json"));
-        String fileName = "/Users/zivseker/Desktop/Projects/assignment2/example_input.json";// from here: https://www.javaguides.net/2019/06/how-to-read-json-file-using-gson-in-java.html
+        String fileName = "/Users/zivseker/Desktop/Projects/assignment2/example_input.json";
         Path path = Paths.get(fileName);
-
         Reader reader = Files.newBufferedReader(path,StandardCharsets.UTF_8);
         JsonParser parser = new JsonParser();
         JsonElement tree = parser.parse(reader);
         JsonObject object = tree.getAsJsonObject();
-        System.out.println(object);
         JsonArray students = object.get("Students").getAsJsonArray();
+
         for(JsonElement studentElement : students){
             JsonObject studentObject = studentElement.getAsJsonObject();
             String studentName = studentObject.get("name").getAsString();
             String studentDepartment = studentObject.get("department").getAsString();
             String  studentStatus = studentObject.get("status").getAsString();
-            JsonArray models = object.get("models").getAsJsonArray();
+            Vector<Model> modelsVector = new Vector<>();
+            JsonArray models = studentObject.get("models").getAsJsonArray();
             for(JsonElement model : models){
                 JsonObject modelObject = model.getAsJsonObject();
                 String modelName = modelObject.get("name").getAsString();
                 String modelType = modelObject.get("type").getAsString();
-                int modelSize = modelObject.get("type").getAsInt();
-               // Model tempmodel = new Model()
+                int modelSize = modelObject.get("size").getAsInt();
+                System.out.println(modelName);
+                Data tempModelData = new Data(modelType, 0, modelSize);
+                Model tempmodel = new Model(modelName, tempModelData);
+                modelsVector.add(tempmodel);
             }
+            Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
+            StudentService studentService = new StudentService(student);
+
         }
 
 
-
-//            JsonArray array = tree.getAsJsonArray();
-//
-//            for (JsonElement element: array) {
-//
-//                if (element.isJsonObject()) {
-//
-//                    JsonObject car = element.getAsJsonObject();
-//
-//                    System.out.println("********************");
-//                    System.out.println(car.get("name").getAsLong());
-//                    System.out.println(car.get("department").getAsString());
-//                }
-//            }
-//        }
-
-
-
-
-
-//    public HashMap<String, String> myMethodName() throws FileNotFoundException //check - from https://stackoverflow.com/questions/29965764/how-to-parse-json-file-with-gson
-//    {
-//        String path = "absolute path to your file";
-//        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
-//
-//        Gson gson = new Gson();
-//        HashMap<String, String> json = gson.fromJson(bufferedReader, HashMap.class);
-//        return json;
-//    }
-}}
+    }
+}

@@ -19,7 +19,7 @@ public class GPU {
         type = _type;
         model = null;
         cluster=cluster.getInstance();
-        unProcessData=new Data();
+      //  unProcessData=new Data(); // - fix the constructor
     }
 
     /**

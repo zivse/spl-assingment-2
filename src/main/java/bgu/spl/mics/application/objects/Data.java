@@ -15,4 +15,11 @@ public class Data {
     private Type type;
     private int processed;
     private int size;
+
+    public Data(String _type, int _processed, int _size){ //fix all gpu related
+        type = Type.valueOf("_type");
+        processed = _processed;
+        size = _size;
+
+    }
 }

@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.objects;
 
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Passive object representing single student.
@@ -14,17 +15,17 @@ public class Student {
         MSc, PhD
     }
 
-    private int name;
+    private String name;
     private String department;
     private Degree status;
     private int publications;
     private int papersRead;
-    private LinkedList<Model> studentModels; //check if legal adding this to the constructor.
+    private Vector<Model> studentModels; //check if legal adding this to the constructor.
 
-    public Student(int _name, String _department, Degree _status,LinkedList<Model> _studentModels ){
+    public Student(String _name, String _department, String _status,Vector<Model> _studentModels ){
         name = _name;
         department = _department;
-        status = _status;
+        status = Degree.valueOf("_status");
         publications = 0;
         papersRead = 0;
         studentModels = _studentModels;
