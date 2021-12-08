@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.objects.Student;
+
 /**
  * A "Marker" interface extending {@link Message}. A micro-service that sends an
  * Event message expects to receive a result of type {@code <T>} when a
@@ -8,4 +10,5 @@ package bgu.spl.mics;
  * Round-Robin fashion.
  */
 public interface Event<T> extends Message {
+
 }
