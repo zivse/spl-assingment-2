@@ -18,7 +18,6 @@ public class Future<T> {
 	 */
 	public Future() {
 		fResult=null;
-		//TODO: implement this
 	}
 	
 	/**
@@ -30,8 +29,10 @@ public class Future<T> {
      * @pre none
 	 * @post none
      */
-	public T get() {
-		//TODO: implement this.
+	public T get() throws InterruptedException{ //check the meaning
+		while(fResult == null){
+			wait();
+		}
 		return fResult;
 	}
 
@@ -46,8 +47,8 @@ public class Future<T> {
 	 * @post this.get() == @param result
      */
 	public void resolve (T result) {
-		fResult=result;
-		//TODO: implement this.
+		fResult = result;
+		notifyAll();
 	}
 	
 	/**
@@ -56,7 +57,9 @@ public class Future<T> {
 	 * @post none
      */
 	public boolean isDone() {
-		//TODO: implement this.
+		if(fResult != null){
+			return true;
+		}
 		return false;
 	}
 	
@@ -65,7 +68,7 @@ public class Future<T> {
      * This method is non-blocking, it has a limited amount of time determined
      * by {@code timeout}
      * <p>
-     * @param timout 	the maximal amount of time units to wait for the result.
+     * @param timeout 	the maximal amount of time units to wait for the result.
      * @param unit		the {@link TimeUnit} time units to wait.
      * @return return the result of type T if it is available, if not, 
      * 	       wait for {@code timeout} TimeUnits {@code unit}. If time has
@@ -73,8 +76,15 @@ public class Future<T> {
 	 * @pre timeout>=0
 	 * @post none
      */
-	public T get(long timeout, TimeUnit unit) {
-		//TODO: implement this.
+	public T get(long timeout, TimeUnit unit) throws InterruptedException { //check!
+		long timeoutInt = TimeUnit.MILLISECONDS.convert(timeout, unit);//convert to milliseconds
+		if(fResult != null){
+			getfResult();
+		}
+
+		else if(fResult == null){
+			wait(timeoutInt);
+		}
 		return null;
 	}
 
