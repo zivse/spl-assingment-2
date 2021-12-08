@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.objects;
 
+import java.net.Proxy;
+
 /**
  * Passive object representing a single GPU.
  * Add all the fields described in the assignment as private fields.
@@ -15,8 +17,8 @@ public class GPU {
     private Model model;
     Cluster cluster;
     Data unProcessData;
-    public GPU(Type _type){
-        type = _type;
+    public GPU(String _type){
+        type = Type.valueOf("_type");
         model = null;
         cluster=cluster.getInstance();
       //  unProcessData=new Data(); // - fix the constructor

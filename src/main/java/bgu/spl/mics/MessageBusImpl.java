@@ -46,7 +46,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void register(MicroService m) {
-		// TODO Auto-generated method stub
+		//microServices.put(,m);
 
 	}
 

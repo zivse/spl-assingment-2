@@ -1,8 +1,7 @@
 package bgu.spl.mics.application;
-import bgu.spl.mics.application.objects.Model;
-import bgu.spl.mics.application.objects.Student;
-import bgu.spl.mics.application.objects.Data;
+import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.StudentService;
+import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.Gson;
 import java.io.*;
 import java.util.HashMap;
@@ -57,6 +56,18 @@ public class CRMSRunner {
             StudentService studentService = new StudentService(student);
 
         }
+        JsonArray GPUArray = object.get("GPU").getAsJsonArray();
+        for (JsonElement gpu : GPUArray){
+            GPU Gpu = new GPU(gpu.getAsString());
+        }
+        JsonArray CPUArray = object.get("CPU").getAsJsonArray();
+        for (JsonElement cpu: CPUArray){
+            CPU Cpu = new CPU(cpu.getAsInt());
+        }
+        int tickTime = object.getAsJsonObject("TickTime").getAsInt();
+        int duration = object.getAsJsonObject("Duration").getAsInt();
+        TimeService timeService = new TimeService(tickTime, duration);
+
 
 
     }
