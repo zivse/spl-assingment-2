@@ -10,6 +10,6 @@ import bgu.spl.mics.application.objects.Student;
  * Round-Robin fashion.
  */
 public interface Event<T> extends Message {
-
+    public Future getFuture();
 
 }

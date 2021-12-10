@@ -1,5 +1,5 @@
 package bgu.spl.mics;
-
+/*
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -49,4 +49,4 @@ class FutureTest {
         //test 1 is going to sleep
         test2.start();
     }
-}
+}*/

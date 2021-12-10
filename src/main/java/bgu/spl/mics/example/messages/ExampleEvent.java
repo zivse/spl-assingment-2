@@ -13,4 +13,6 @@ public class ExampleEvent implements Event<String>{
     public String getSenderName() {
         return senderName;
     }
+
+
 }
