@@ -13,7 +13,7 @@ public class MessageBusImpl implements MessageBus {
 	private HashMap <Message, Future>  futers;
 	private HashMap<MicroService , Vector<Message>> messages;
 
-		@Override
+	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		// TODO Auto-generated method stub
 
@@ -46,7 +46,6 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void register(MicroService m) {
-		//microServices.put(,m);
 
 	}
 
@@ -60,12 +59,13 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+	//for test
 	public<T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro){
 		return messages.get(eventType).contains(micro);
 	}
-
-
-
 	public<T>boolean checkisReallyAddedSubBroad(Class<? extends Broadcast> eventType, MicroService micro){
 			return microServices.get(eventType).contains(micro);
 	}

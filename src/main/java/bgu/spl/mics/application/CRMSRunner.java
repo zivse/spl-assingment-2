@@ -47,14 +47,13 @@ public class CRMSRunner {
                 String modelName = modelObject.get("name").getAsString();
                 String modelType = modelObject.get("type").getAsString();
                 int modelSize = modelObject.get("size").getAsInt();
-                System.out.println(modelName);
+                //System.out.println(modelName);
                 Data tempModelData = new Data(modelType, 0, modelSize);
                 Model tempmodel = new Model(modelName, tempModelData);
                 modelsVector.add(tempmodel);
             }
             Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
             StudentService studentService = new StudentService(student);
-
         }
         JsonArray GPUArray = object.get("GPU").getAsJsonArray();
         for (JsonElement gpu : GPUArray){

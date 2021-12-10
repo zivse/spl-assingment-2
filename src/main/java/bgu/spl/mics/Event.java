@@ -11,4 +11,5 @@ import bgu.spl.mics.application.objects.Student;
  */
 public interface Event<T> extends Message {
 
+
 }
