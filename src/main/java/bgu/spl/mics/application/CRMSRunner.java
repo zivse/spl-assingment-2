@@ -1,18 +1,11 @@
-package bgu.spl.mics.application;/*
+package bgu.spl.mics.application;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.StudentService;
 import bgu.spl.mics.application.services.TimeService;
-import com.google.gson.Gson;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.io.FileReader;
-import java.util.Iterator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -20,16 +13,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Vector;
-*/
+
 /** This is the Main class of Compute Resources Management System application. You should parse the input file,
  * create the different instances of the objects, and run the system.
  * In the end, you should output a text file.
  */
 public class CRMSRunner {
-    public static void main(String[] args) {/*throws IOException {
+    public static void main(String[] args) {
         String fileName = "/Users/zivseker/Desktop/Projects/assignment2/example_input.json";
         Path path = Paths.get(fileName);
-        Reader reader = Files.newBufferedReader(path,StandardCharsets.UTF_8);
+        Reader reader = null;
+        try{
+            reader = Files.newBufferedReader(path,StandardCharsets.UTF_8);
+        }
+        catch (IOException ignored) {
+        };
         JsonParser parser = new JsonParser();
         JsonElement tree = parser.parse(reader);
         JsonObject object = tree.getAsJsonObject();
@@ -48,7 +46,7 @@ public class CRMSRunner {
                 String modelType = modelObject.get("type").getAsString();
                 int modelSize = modelObject.get("size").getAsInt();
                 //System.out.println(modelName);
-                Data tempModelData = new Data(modelType, 0, modelSize);
+                Data tempModelData = new Data(modelType, modelSize);
                 Model tempmodel = new Model(modelName, tempModelData);
                 modelsVector.add(tempmodel);
             }
@@ -68,7 +66,7 @@ public class CRMSRunner {
         TimeService timeService = new TimeService(tickTime, duration);
 
 
-*/
+
     }
 
 }
