@@ -54,9 +54,9 @@ public class GPU {
         return new DataBatch(model.getData(),tempIndexCurrentData);
     }
     public void addData(MicroService m,DataBatch dataToTrain) throws InterruptedException {
-    while(dataToTrainVector.size()==memory){
-     m.wait();
-    }
+        while(dataToTrainVector.size()==memory){
+            m.wait();
+        }
         dataToTrainVector.add(dataToTrain);
     }
     public void trainDataLoop(MicroService m) throws InterruptedException {
