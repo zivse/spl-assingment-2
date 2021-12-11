@@ -6,9 +6,13 @@ package bgu.spl.mics.application.objects;
  */
 
 public class DataBatch {
-    private int size;
-    public int getSize(){
-        return size;
+    private int index;
+    private Data data;
+    public DataBatch(int _index, Data _data){
+        index = _index;
+        data = _data;
     }
-    
+    public Data getDataFromBath(){
+        return data;
+    }
 }

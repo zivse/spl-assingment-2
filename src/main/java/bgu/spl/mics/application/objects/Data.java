@@ -22,5 +22,8 @@ public class Data {
         size = _size;
 
     }
+    public Type getType(){
+        return type;
+    }
 
 }

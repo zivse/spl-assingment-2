@@ -20,55 +20,42 @@ public class CPU {
         cluster=cluster.getInstance();
         beginningTime=0;
     }
-    /**
-    @pre none
-    @post beginningTime=@pre beginningTime+1
-     */
-    public void updateTime(){
-        beginningTime=beginningTime++;
+    public Boolean proccessData(DataBatch dataBatch){
+        Data.Type type = dataBatch.getDataFromBath().getType();
+        switch (type){
+            case Tabular:{
+                for(int i=0; i< 1*(32/cores); i++){
+                    try{
+                        this.wait();
+                    }
+                    catch (InterruptedException ignored){
+                    }
+                }
+                break;
+            }
+            case Text: {
+                for (int i = 0; i < 2 * (32 / cores); i++) {
+                    try {
+                        this.wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+                break;
+
+            }
+            case Images:{
+                for(int i=0; i< 4*(32/cores); i++){
+                    try{
+                        this.wait();
+                    }
+                    catch (InterruptedException ignored){
+                    }
+                }
+                break;
+            }
+        }
+        return true;
     }
 
-    /**
-     *
-     * @return the field beginningTime
-     * @pre none
-     * @post none
-     */
-    public int getTime(){
-        return beginningTime;
-    }
-
-    /**
-     *
-     * @param unProcess
-     * @return the process data
-     * @pre unProcess!=null
-     * @post Process=@param unProcess
-     */
-    public DataBatch ProcessData(DataBatch unProcess){ //process the data and return it processed
-        DataBatch Process=unProcess;
-       return Process;
-    }
-
-    /**
-     *
-     * @param unProcess
-     * @pre unProcess!=null
-     * @post isAddedData(@param unProcess)==true
-     */
-    public void addUnProcessedData(DataBatch unProcess){
-      data.add(unProcess);
-    }
-
-    /**
-     *
-     * @param unProcess
-     * @return true if data contains unProcess
-     * @pre none
-     * @post none
-     */
-    public boolean isAddedData(DataBatch unProcess){
-        return data.contains(unProcess);
-    }
 
 }
