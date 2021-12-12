@@ -61,7 +61,7 @@ public MessageBusImpl(){
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-	e.getFuture().resolve(result);
+	  e.getFuture().resolve(result);
 	}
 
 	@Override

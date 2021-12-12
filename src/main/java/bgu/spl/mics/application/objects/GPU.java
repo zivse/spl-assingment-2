@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.objects;
-
 import bgu.spl.mics.Message;
 import bgu.spl.mics.MicroService;
-
 import java.net.Proxy;
 import java.util.Vector;
 /**

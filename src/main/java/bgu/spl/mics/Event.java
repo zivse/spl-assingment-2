@@ -1,5 +1,4 @@
 package bgu.spl.mics;
-
 import bgu.spl.mics.application.objects.Student;
 
 /**
@@ -11,5 +10,4 @@ import bgu.spl.mics.application.objects.Student;
  */
 public interface Event<T> extends Message {
     public Future getFuture();
-
 }
