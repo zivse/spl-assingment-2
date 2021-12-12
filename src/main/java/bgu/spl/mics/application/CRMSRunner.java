@@ -61,6 +61,7 @@ public class CRMSRunner {
         for (JsonElement cpu: CPUArray){
             CPU Cpu = new CPU(cpu.getAsInt());
         }
+
         int tickTime = object.getAsJsonObject("TickTime").getAsInt();
         int duration = object.getAsJsonObject("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);

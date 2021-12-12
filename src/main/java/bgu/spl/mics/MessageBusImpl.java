@@ -65,7 +65,7 @@ public MessageBusImpl(){
 	}
 
 	@Override
-	public void sendBroadcast(Broadcast b) {
+	public void sendBroadcast(Broadcast b){
 		Class bClass=b.getClass();
 		Vector<MicroService>relatedServices=microServices.get(bClass);
 		for(MicroService current:relatedServices){

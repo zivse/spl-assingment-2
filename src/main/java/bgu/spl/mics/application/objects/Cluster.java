@@ -9,14 +9,21 @@ package bgu.spl.mics.application.objects;
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
 public class Cluster {
+	private static Cluster instance = null;
+
+	public Cluster(){
+
+	}
 
 
 	/**
      * Retrieves the single instance of this class.
      */
 	public static Cluster getInstance() {
-		//TODO: Implement this
-		return null;
+		if(instance == null){
+			instance = new Cluster();
+		}
+		return instance;
 	}
 
 }

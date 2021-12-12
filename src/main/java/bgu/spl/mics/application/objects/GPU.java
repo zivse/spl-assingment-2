@@ -44,6 +44,7 @@ public class GPU {
         indexCurrentData=0;
     }
     public int getIndexCurrentData(){
+
         return indexCurrentData;
     }
     public DataBatch splitData(MicroService m){
