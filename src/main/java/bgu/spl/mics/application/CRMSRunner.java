@@ -2,10 +2,8 @@ package bgu.spl.mics.application;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.StudentService;
 import bgu.spl.mics.application.services.TimeService;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +18,7 @@ import java.util.Vector;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String fileName = "C://Users//nir42//Downloads/example_input.json";   //Users/zivseker/Desktop/Projects/assignment2/example_input.json";
+        String fileName = "./example_input.json";//Users/zivseker/Desktop/Projects/assignment2/example_input.json";  //";C://Users//nir42//Downloads/example_input.json
         Path path = Paths.get(fileName);
         Reader reader = null;
         try{
@@ -53,21 +51,21 @@ public class CRMSRunner {
             StudentService studentService = new StudentService(student);
         }
         Cluster cluster=new Cluster(); //השורהה מתחת עושה בעיות שם בדיוק זה נתקע
-       /* JsonArray GPUArray = object.get("GPU").getAsJsonArray();
+        JsonArray GPUArray = object.get("GPUS").getAsJsonArray();
+        System.out.println(GPUArray.toString());
        for (JsonElement gpu : GPUArray){
             GPU Gpu = new GPU(gpu.getAsString());
             cluster.addGPU(Gpu);
         }
-        JsonArray CPUArray = object.get("CPU").getAsJsonArray();
+        JsonArray CPUArray = object.get("CPUS").getAsJsonArray();
         for (JsonElement cpu: CPUArray){
             CPU Cpu = new CPU(cpu.getAsInt());
             cluster.addCPU(Cpu);
         }
-
-        int tickTime = object.getAsJsonObject("TickTime").getAsInt();
-        int duration = object.getAsJsonObject("Duration").getAsInt();
+        int tickTime = object.get("TickTime").getAsInt();//.getAsInt();
+        int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);
-*/
+
 
     }
 
