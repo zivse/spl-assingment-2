@@ -54,6 +54,7 @@ public class CPU {
                 break;
             }
         }
+        cluster.trainData(dataBatch);
         return true;
     }
 

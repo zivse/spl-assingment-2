@@ -16,12 +16,22 @@ public class GPU {
     private Type type;
     private Model model;//the model the gpu is currently working on
     Cluster cluster;
+    int alreadyTrainedData;
     int indexCurrentData;
     int memory;
     Vector<DataBatch> dataToTrainVector;
     int timeToTrainEachData;
     public GPU(String _type){
-        type = Type.valueOf(_type);
+        if(_type.compareTo("RTX3090")==0){
+            type = Type.RTX3090;
+        }
+        else if(_type.compareTo("RTX2080")==0){
+            type = Type.RTX2080;
+        }
+        else{
+            type = Type.GTX1080;
+        }
+        alreadyTrainedData=0;
         model = null;
         cluster=cluster.getInstance();
         indexCurrentData=0;
@@ -50,12 +60,11 @@ public class GPU {
     public DataBatch splitData(MicroService m){
         int tempIndexCurrentData=indexCurrentData;
         indexCurrentData=indexCurrentData+1000;
-        return new DataBatch(model.getData(),tempIndexCurrentData);
+        DataBatch dataToProcess=new DataBatch(model.getData(),tempIndexCurrentData,this);
+        cluster.processData(dataToProcess);
+        return dataToProcess;
     }
-    public void addData(MicroService m,DataBatch dataToTrain) throws InterruptedException {
-        while(dataToTrainVector.size()==memory){
-            m.wait();
-        }
+    public void addData(DataBatch dataToTrain) {
         dataToTrainVector.add(dataToTrain);
     }
     public void trainDataLoop(MicroService m) throws InterruptedException {

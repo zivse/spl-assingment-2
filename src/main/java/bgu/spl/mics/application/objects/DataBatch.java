@@ -8,11 +8,16 @@ package bgu.spl.mics.application.objects;
 public class DataBatch {
     private int start_index;
     private Data data;
-    public DataBatch(Data _data,int _start_index){
+    private GPU gpu;
+    public DataBatch(Data _data,int _start_index,GPU _gpu){
         start_index = _start_index;
         data = _data;
+        gpu=_gpu;
     }
     public Data getDataFromBath(){
         return data;
+    }
+    public GPU getGPU(){
+        return gpu;
     }
 }

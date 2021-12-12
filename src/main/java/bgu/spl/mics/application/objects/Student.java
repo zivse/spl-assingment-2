@@ -25,7 +25,12 @@ public class Student {
     public Student(String _name, String _department, String _status,Vector<Model> _studentModels ){
         name = _name;
         department = _department;
-        status = Degree.valueOf("_status");
+        if(_status.compareTo("MSc")==0){
+            status = Degree.MSc;
+        }
+        else{
+            status = Degree.PhD;
+        }
         publications = 0;
         papersRead = 0;
         studentModels = _studentModels;

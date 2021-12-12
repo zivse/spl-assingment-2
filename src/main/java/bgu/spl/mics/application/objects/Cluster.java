@@ -1,6 +1,8 @@
 package bgu.spl.mics.application.objects;
 
 
+import java.util.Vector;
+
 /**
  * Passive object representing the cluster.
  * <p>
@@ -10,11 +12,24 @@ package bgu.spl.mics.application.objects;
  */
 public class Cluster {
 	private static Cluster instance = null;
-
+	Vector<GPU>gpusVector;
+	Vector<CPU>cpusVector;
 	public Cluster(){
-
+		gpusVector=new Vector<GPU>();
+		cpusVector=new Vector<CPU>();
 	}
-
+	public void addCPU(CPU cpu){
+		cpusVector.add(cpu);
+	}
+	public void addGPU(GPU gpu){
+		gpusVector.add(gpu);
+	}
+public void processData(DataBatch dataToProcess){ //need to pick available cpu and tell him to process
+	cpusVector.get(0).proccessData(dataToProcess);
+}
+public void trainData(DataBatch dataToTrain){
+	dataToTrain.getGPU().addData(dataToTrain);
+}
 
 	/**
      * Retrieves the single instance of this class.

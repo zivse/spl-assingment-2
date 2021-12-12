@@ -135,7 +135,7 @@ public MessageBusImpl(){
 	}
 
 
-
+/*
 	//for test
 	public<T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro){
 		return messagesMap.get(eventType).contains(micro);
@@ -153,5 +153,5 @@ public MessageBusImpl(){
 			return messagesMap.containsKey(micro);
 
 	}
-
+*/
 }

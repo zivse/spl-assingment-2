@@ -105,10 +105,10 @@ public interface MessageBus {
      *                              to became available.
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
-    <T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro); //check if the que is updated
+   /* <T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro); //check if the que is updated
     <T>boolean checkisReallyAddedSubBroad(Class<? extends Broadcast> eventType, MicroService micro); //check if the que is updated
     boolean hasBro(Broadcast bro, MicroService micro);
     <T> boolean conEvent(Event<T> event, MicroService micro);
-    boolean registerIsTrue(MicroService micro);
+    boolean registerIsTrue(MicroService micro);*/
 
 }

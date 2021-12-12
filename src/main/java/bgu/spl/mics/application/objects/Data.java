@@ -17,7 +17,15 @@ public class Data {
     private int size;
 
     public Data(String _type, int _size){ //fix all gpu related
-        type = Type.valueOf("_type");
+        if(_type.compareTo("Text")==0){
+            type = type.Text;
+        }
+        else if(_type.compareTo("Images")==0){
+            type = type.Images;
+        }
+        else{
+            type = type.Tabular;
+        }
         processed = 0;
         size = _size;
 
