@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import java.util.HashMap;
+
 /**
  * The MicroService is an abstract class that any micro-service in the system
  * must extend. The abstract MicroService class is responsible to get and
@@ -22,13 +24,16 @@ public abstract class MicroService implements Runnable {
 
     private boolean terminated = false;
     private final String name;
-
+    private HashMap <Class<? extends Message>,Callback> connectCallToEventHashMap; //this way we can take the call function and use it in run after the subscribe happen.
+    private MessageBusImpl bus;
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
     public MicroService(String name) {
         this.name = name;
+        connectCallToEventHashMap=new HashMap<Class<? extends Message>,Callback>();
+        bus=bus.getInstance();
     }
 
     /**
@@ -53,7 +58,8 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-        //TODO: implement this.
+        connectCallToEventHashMap.put(type,callback);
+        bus.subscribeEvent(type,this);
     }
 
     /**
@@ -77,7 +83,8 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        //TODO: implement this.
+        connectCallToEventHashMap.put(type,callback);
+        bus.subscribeBroadcast(type,this);
     }
 
     /**
@@ -124,7 +131,7 @@ public abstract class MicroService implements Runnable {
     /**
      * this method is called once when the event loop starts.
      */
-    protected abstract void initialize() throws InterruptedException;
+    protected abstract void initialize();
 
     /**
      * Signals the event loop that it must terminate after handling the current
@@ -148,7 +155,15 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
-        //initialize();
+        bus.register(this);
+        initialize();
+        connectCallToEventHashMap.get(TickBroadcast.class);
+        while(!terminated){
+            try {
+                bus.awaitMessage(this);
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
 }

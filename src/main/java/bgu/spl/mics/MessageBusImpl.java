@@ -1,5 +1,7 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.objects.Cluster;
+
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -15,7 +17,7 @@ public class MessageBusImpl implements MessageBus {
 	private int RRPTrainModelEventCounter;//round Robin Pattern Train Model Event Counter
 	private int RRPTestModelEventCounter;//round Robin Pattern Test Model Event Counter
 	private int RRPPublishResultsEventCounter;//round Robin Pattern Publish Results Event Counter
-
+	private static MessageBusImpl instance = null;
 
 public MessageBusImpl(){
 	microServices=new HashMap<Class<? extends Message>,Vector<MicroService>>();
@@ -30,6 +32,12 @@ public MessageBusImpl(){
 	RRPTestModelEventCounter=0;
 	RRPPublishResultsEventCounter=0;
 }
+public static MessageBusImpl getInstance() {
+		if(instance == null){
+			instance = new MessageBusImpl();
+		}
+		return instance;
+	}
 //this methode need to be thread safe!!!!!
 	private int addCountRoundRobinPattern(String EventName,int numOfServices){ //get event name and size of the services vector and update the counter of the related services pattern and return the counter before update
 	int tempCounter=0;
@@ -56,7 +64,6 @@ public MessageBusImpl(){
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		microServices.get(type).add(m);
-
 	}
 
 	@Override

@@ -104,6 +104,7 @@ public interface MessageBus {
      * @throws InterruptedException if interrupted while waiting for a message
      *                              to became available.
      */
+
     Message awaitMessage(MicroService m) throws InterruptedException;
    /* <T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro); //check if the que is updated
     <T>boolean checkisReallyAddedSubBroad(Class<? extends Broadcast> eventType, MicroService micro); //check if the que is updated

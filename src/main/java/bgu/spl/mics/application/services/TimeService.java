@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.PublishResultsEvent;
 import bgu.spl.mics.TickBroadcast;
 
 import java.util.Timer;
@@ -29,18 +30,20 @@ public class TimeService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		Timer timer = new Timer();
-		TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				sendBroadcast(new TickBroadcast());
-			}
+		subscribeBroadcast(TickBroadcast.class,callBack -> {
+			Timer timer = new Timer();
+			TimerTask timerTask = new TimerTask() {
+				@Override
+				public void run() {
+					sendBroadcast(new TickBroadcast());
+				}
 
-		};
-		while (currentTime < duration){
-			timer.schedule(timerTask,tickTime);
-			currentTime += 1;
-		}
+			};
+			while (currentTime < duration){
+				timer.schedule(timerTask,tickTime);
+				currentTime += 1;
+			}
+		});
 	}
 
 }

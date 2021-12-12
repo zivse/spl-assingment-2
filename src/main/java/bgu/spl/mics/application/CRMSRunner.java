@@ -18,7 +18,7 @@ import java.util.Vector;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String fileName = "./example_input.json";//Users/zivseker/Desktop/Projects/assignment2/example_input.json";  //";C://Users//nir42//Downloads/example_input.json
+        String fileName = "C://Users//nir42//Downloads/example_input.json";//Users/zivseker/Desktop/Projects/assignment2/example_input.json";  //";C://Users//nir42//Downloads/example_input.json
         Path path = Paths.get(fileName);
         Reader reader = null;
         try{
@@ -50,9 +50,9 @@ public class CRMSRunner {
             Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
             StudentService studentService = new StudentService(student);
         }
-        Cluster cluster=new Cluster(); //השורהה מתחת עושה בעיות שם בדיוק זה נתקע
+        Cluster cluster=new Cluster();
         JsonArray GPUArray = object.get("GPUS").getAsJsonArray();
-        System.out.println(GPUArray.toString());
+       // System.out.println(GPUArray.toString());
        for (JsonElement gpu : GPUArray){
             GPU Gpu = new GPU(gpu.getAsString());
             cluster.addGPU(Gpu);
@@ -62,11 +62,8 @@ public class CRMSRunner {
             CPU Cpu = new CPU(cpu.getAsInt());
             cluster.addCPU(Cpu);
         }
-        int tickTime = object.get("TickTime").getAsInt();//.getAsInt();
+        int tickTime = object.get("TickTime").getAsInt();
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);
-
-
     }
-
 }
