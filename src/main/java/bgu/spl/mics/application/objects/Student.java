@@ -20,9 +20,8 @@ public class Student {
     private Degree status;
     private int publications;
     private int papersRead;
-    private Vector<Model> studentModels; //check if legal adding this to the constructor.
 
-    public Student(String _name, String _department, String _status,Vector<Model> _studentModels ){
+    public Student(String _name, String _department, String _status ){
         name = _name;
         department = _department;
         if(_status.compareTo("MSc")==0){
@@ -33,6 +32,5 @@ public class Student {
         }
         publications = 0;
         papersRead = 0;
-        studentModels = _studentModels;
     }
 }

@@ -14,15 +14,15 @@ public class Model {
     }
     private String name;
     private Data data;
-   // private Student student;
+    private Student student;
     private Status status;
     private Results results;
    // private int size;
-public Model(String _name, Data _data){ //check if delete student - Student _student
+public Model(String _name, Data _data,Student _student){ //check if delete student - Student _student
     name=_name;
     data=_data;
     //size = _size;
-   // student=_student;
+   student=_student;
     status = Status.PreTrained;
     results = Results.None;
 
