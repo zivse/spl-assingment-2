@@ -1,6 +1,13 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.TestModelEvent;
+import bgu.spl.mics.TickBroadcast;
+import bgu.spl.mics.TrainModelEvent;
+import bgu.spl.mics.application.objects.GPU;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * GPU service is responsible for handling the
@@ -12,15 +19,19 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class GPUService extends MicroService {
-
-    public GPUService(String name) {
-        super("Change_This_Name");
-        // TODO Implement this
+private GPU gpu;
+    public GPUService(String name,GPU _gpu) {
+        super(name);
+        gpu=_gpu;
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
+        subscribeBroadcast(TickBroadcast.class, callBack -> {
+            gpu.updateTime();
+        });
+        subscribeEvent(TestModelEvent.class,callBack->{
 
+        });
     }
 }

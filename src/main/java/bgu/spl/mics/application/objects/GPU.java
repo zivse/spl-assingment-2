@@ -15,12 +15,13 @@ public class GPU {
     enum Type {RTX3090, RTX2080, GTX1080}
     private Type type;
     private Model model;//the model the gpu is currently working on
-    Cluster cluster;
-    int alreadyTrainedData;
-    int indexCurrentData;
-    int memory;
-    Vector<DataBatch> dataToTrainVector;
-    int timeToTrainEachData;
+    private Cluster cluster;
+    private int alreadyTrainedData;
+    private int indexCurrentData;
+    private int memory;
+    private Vector<DataBatch> dataToTrainVector;
+    private int timeToTrainEachData;
+    private int time;
     public GPU(String _type){
         if(_type.compareTo("RTX3090")==0){
             type = Type.RTX3090;
@@ -48,6 +49,10 @@ public class GPU {
             memory=8;
             timeToTrainEachData=4;
         }
+        time=1;
+    }
+    public void updateTime(){
+        time=time+1;
     }
     public void setModel(Model currentModel){ //set the model of the gpu to new model to work on.
         model=currentModel;

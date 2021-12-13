@@ -157,10 +157,9 @@ public abstract class MicroService implements Runnable {
     public final void run() {
         bus.register(this);
         initialize();
-        connectCallToEventHashMap.get(TickBroadcast.class);
         while(!terminated){
             try {
-                bus.awaitMessage(this);
+                connectCallToEventHashMap.get(bus.awaitMessage(this));
             } catch (InterruptedException e) {
             }
         }

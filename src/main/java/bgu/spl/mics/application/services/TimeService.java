@@ -30,20 +30,18 @@ public class TimeService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		subscribeBroadcast(TickBroadcast.class,callBack -> {
-			Timer timer = new Timer();
-			TimerTask timerTask = new TimerTask() {
-				@Override
-				public void run() {
-					sendBroadcast(new TickBroadcast());
-				}
-
-			};
-			while (currentTime < duration){
-				timer.schedule(timerTask,tickTime);
-				currentTime += 1;
+		Timer timer = new Timer();
+		TimerTask timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				sendBroadcast(new TickBroadcast());
 			}
-		});
+
+		};
+		while (currentTime < duration){
+			timer.schedule(timerTask,tickTime);
+			currentTime += 1;
+		}
 	}
 
 }
