@@ -18,7 +18,7 @@ import java.util.Vector;
  */
 public class CRMSRunner {
     public static void main(String[] args) {
-        String fileName = "C://Users//nir42//Downloads/example_input.json";//Users/zivseker/Desktop/Projects/assignment2/example_input.json";  //";C://Users//nir42//Downloads/example_input.json
+        String fileName = "./example_input.json";//Users/zivseker/Desktop/Projects/assignment2/example_input.json";  //";C://Users//nir42//Downloads/example_input.json
         Path path = Paths.get(fileName);
         Reader reader = null;
         try{
@@ -31,12 +31,16 @@ public class CRMSRunner {
         JsonObject object = tree.getAsJsonObject();
         JsonArray students = object.get("Students").getAsJsonArray();
 
+
         for(JsonElement studentElement : students){
             JsonObject studentObject = studentElement.getAsJsonObject();
             String studentName = studentObject.get("name").getAsString();
             String studentDepartment = studentObject.get("department").getAsString();
             String  studentStatus = studentObject.get("status").getAsString();
             Vector<Model> modelsVector = new Vector<>();
+            Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
+            StudentService studentService = new StudentService(student);
+            Thread studentServiceThread = new Thread(studentService);
             JsonArray models = studentObject.get("models").getAsJsonArray();
             for(JsonElement model : models){
                 JsonObject modelObject = model.getAsJsonObject();
@@ -44,16 +48,16 @@ public class CRMSRunner {
                 String modelType = modelObject.get("type").getAsString();
                 int modelSize = modelObject.get("size").getAsInt();
                 Data tempModelData = new Data(modelType, modelSize);
-                Model tempmodel = new Model(modelName, tempModelData);
+                Model tempmodel = new Model(modelName, tempModelData,student);
                 modelsVector.add(tempmodel);
+                student.setModelsVector(modelsVector);
             }
-            Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
-            StudentService studentService = new StudentService(student);
+
         }
         Cluster cluster=new Cluster();
         JsonArray GPUArray = object.get("GPUS").getAsJsonArray();
-       // System.out.println(GPUArray.toString());
-       for (JsonElement gpu : GPUArray){
+        // System.out.println(GPUArray.toString());
+        for (JsonElement gpu : GPUArray){
             GPU Gpu = new GPU(gpu.getAsString());
             cluster.addGPU(Gpu);
         }

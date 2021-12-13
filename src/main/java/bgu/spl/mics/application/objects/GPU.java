@@ -93,6 +93,9 @@ public class GPU {
             timeForTraining--;
         }
     }
+    public void test(){
+
+    }
     public void initializeWork(Model currentModel){
         setModel(currentModel);
     }

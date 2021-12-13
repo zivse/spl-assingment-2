@@ -20,10 +20,12 @@ public class Student {
     private Degree status;
     private int publications;
     private int papersRead;
+    private Vector<Model> modelsVector;
 
-    public Student(String _name, String _department, String _status ){
+    public Student(String _name, String _department, String _status,Vector<Model> _modelsVector){
         name = _name;
         department = _department;
+        modelsVector = _modelsVector;
         if(_status.compareTo("MSc")==0){
             status = Degree.MSc;
         }
@@ -32,5 +34,9 @@ public class Student {
         }
         publications = 0;
         papersRead = 0;
+    }
+
+    public void setModelsVector(Vector<Model> _modelsVector) {
+        modelsVector = _modelsVector;
     }
 }
