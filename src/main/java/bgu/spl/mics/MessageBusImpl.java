@@ -58,7 +58,8 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		microServices.get(type).add(m);
+
+	microServices.get(type).add(m);
 	}
 
 	@Override
@@ -137,7 +138,14 @@ public static MessageBusImpl getInstance() {
 			if (message != null) {
 				return message;
 			}
-			m.wait();
+			Object lock=new Object();
+			synchronized(lock) {
+				try {
+					lock.wait();
+				} catch (InterruptedException e) {
+				}
+			}
+
 		}
 	}
 

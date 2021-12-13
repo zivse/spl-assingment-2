@@ -27,9 +27,20 @@ public class Model {
 
 
     }
-    public Results getRsults(){
+    public Results getResults(){
         return results;
 
+    }
+    public String getStudentDegree(){
+        return student.getDegree();
+    }
+    public void setResults(String result){
+    if(result.compareTo("Good")==0){
+       results=Results.Good;
+    }
+    else{
+        results=Results.Bad;
+    }
     }
     public void setResults(Results _results){
         results = _results;

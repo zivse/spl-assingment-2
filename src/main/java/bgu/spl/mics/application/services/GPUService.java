@@ -1,10 +1,9 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.MicroService;
-import bgu.spl.mics.TestModelEvent;
-import bgu.spl.mics.TickBroadcast;
-import bgu.spl.mics.TrainModelEvent;
+import bgu.spl.mics.*;
 import bgu.spl.mics.application.objects.GPU;
+import bgu.spl.mics.application.objects.Student;
+import com.sun.javafx.geom.transform.BaseTransform;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,7 +11,6 @@ import java.util.TimerTask;
 /**
  * GPU service is responsible for handling the
  * {@link TrainModelEvent} and {@link TestModelEvent},
- * in addition to sending the {@link DataPreProcessEvent}.
  * This class may not hold references for objects which it is not responsible for.
  *
  * You can add private fields and public methods to this class.
@@ -27,11 +25,36 @@ private GPU gpu;
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(TickBroadcast.class, callBack -> {
+        subscribeBroadcast(TickBroadcast.class,(E) -> {
             gpu.updateTime();
         });
-        subscribeEvent(TestModelEvent.class,callBack->{
-
+        subscribeEvent(TestModelEvent.class,(E)->{
+            int range = 10+1;
+            int prob= (int)(Math.random()*range);
+            String typeStudent=gpu.getStudentFromGPU();
+            String result="";
+            if(typeStudent.compareTo("MSc")==0){
+                if(prob<=6){
+                    result="Good";
+                gpu.setModel("Good");
+                }
+                else{
+                    result="Bad";
+                    gpu.setModel("Bad");
+                }
+            }
+            else{
+                if(prob<=8){
+                    result= "Good";
+                    gpu.setModel("Good");
+                }
+                else{
+                    result="Bad";
+                    gpu.setModel("Bad");
+                }
+            }
+            complete(E,result);
         });
+        //TODO: update future
     }
 }

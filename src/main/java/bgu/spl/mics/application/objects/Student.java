@@ -20,9 +20,11 @@ public class Student {
     private Degree status;
     private int publications;
     private int papersRead;
+    Vector<String>goodArticles;
     private Vector<Model> modelsVector;
 
     public Student(String _name, String _department, String _status,Vector<Model> _modelsVector){
+        goodArticles=new Vector<String>();
         name = _name;
         department = _department;
         modelsVector = _modelsVector;
@@ -38,5 +40,11 @@ public class Student {
 
     public void setModelsVector(Vector<Model> _modelsVector) {
         modelsVector = _modelsVector;
+    }
+    public String getDegree(){
+        if(status==Degree.MSc){
+            return "MSc";
+        }
+        return "PhD";
     }
 }
