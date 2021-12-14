@@ -23,10 +23,10 @@ private GPU gpu;
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(TickBroadcast.class, (TickBroadcast tickBroadcastGpu) ->  {gpu.updateTime();});
-        subscribeEvent(TestModelEvent.class,callBack->{
+        subscribeBroadcast(TickBroadcast.class, (tickBroadcastGpu) ->  {gpu.updateTime();});
+     //   subscribeEvent(TestModelEvent.class,callBack->{
 
-        });
-        subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate()); //for closing
+     //   });
+      //  subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate()); //for closing
     }
 }

@@ -31,15 +31,14 @@ public class TimeService extends MicroService{
 	@Override
 	protected void initialize() {
 		Timer timer = new Timer();
-		TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				sendBroadcast(new TickBroadcast());
-			}
-
-		};
 		while (currentTime < duration){
-			timer.schedule(timerTask,tickTime);
+			TimerTask task=new TimerTask() {
+				@Override
+				public void run() {
+					sendBroadcast(new TickBroadcast());
+				}
+			};
+			timer.schedule(task,tickTime);
 			currentTime += 1;
 		}
 	}

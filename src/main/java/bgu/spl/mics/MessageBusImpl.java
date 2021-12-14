@@ -17,6 +17,7 @@ public class MessageBusImpl implements MessageBus {
 	private int RRPTestModelEventCounter;//round Robin Pattern Test Model Event Counter
 	private int RRPPublishResultsEventCounter;//round Robin Pattern Publish Results Event Counter
 	private static MessageBusImpl instance = null;
+	private static Object lock=new Object();
 
 public MessageBusImpl(){
 	microServices=new HashMap<Class<? extends Message>,Vector<MicroService>>();
@@ -25,6 +26,7 @@ public MessageBusImpl(){
 	microServices.put(PublishResultsEvent.class,new Vector<MicroService>());
 	microServices.put(PublishConferenceBroadcast.class,new Vector<MicroService>());
 	microServices.put(TickBroadcast.class,new Vector<MicroService>());
+	microServices.put(TerminateBroadcast.class,new Vector<MicroService>());
 	futures=new HashMap<Message, Future>();
 	messagesMap =new HashMap<MicroService , Vector<Message>>();
 	RRPTrainModelEventCounter=0;
@@ -79,7 +81,7 @@ public static MessageBusImpl getInstance() {
 		for(MicroService current:relatedServices){
 			if(messagesMap.get(current).size()==0){
 				messagesMap.get(current).add(b);
-				notifyAll();
+				//lock.notifyAll();
 			}
 			else{
 				messagesMap.get(current).add(b);
@@ -100,7 +102,7 @@ public static MessageBusImpl getInstance() {
 			MicroService tempServiceToUpdate=relatedServices.get(indexOfChosenEvent);
 			if(messagesMap.get(tempServiceToUpdate).size()==0){
 				messagesMap.get(tempServiceToUpdate).add(e);
-				notifyAll();
+				lock.notifyAll();
 			}
 			else{
 				messagesMap.get(tempServiceToUpdate).add(e);
@@ -138,7 +140,6 @@ public static MessageBusImpl getInstance() {
 			if (message != null) {
 				return message;
 			}
-			Object lock=new Object();
 			synchronized(lock) {
 				try {
 					lock.wait();

@@ -78,15 +78,17 @@ public class CRMSRunner {
             CPU Cpu = new CPU(cpu.getAsInt());
             cluster.addCPU(Cpu);
         }
-        JsonArray ConferencesArray = object.get("CPUS").getAsJsonArray();
+        /*JsonArray ConferencesArray = object.get("CPUS").getAsJsonArray();
         for(JsonElement conference : ConferencesArray){
             JsonObject conferenceObject = conference.getAsJsonObject();
             String conferenceName = conferenceObject.get("name").getAsString();
             int  conferenceDate = conferenceObject.get("date").getAsInt();
             ConfrenceInformation tempConf = new ConfrenceInformation(conferenceName, conferenceDate);
-        }
+        }*/
         int tickTime = object.get("TickTime").getAsInt();
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);
+        Thread test2=new Thread(timeService);
+        test2.start();
     }
 }
