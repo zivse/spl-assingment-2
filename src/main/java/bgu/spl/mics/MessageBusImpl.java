@@ -82,7 +82,6 @@ public static MessageBusImpl getInstance() {
 			if (messagesMap.get(current).size() == 0) {
 			synchronized (lock) {
 					messagesMap.get(current).add(b);
-					System.out.println("need to wake up in send Broadcast");
 					lock.notifyAll();
 				}
 			}
@@ -106,7 +105,6 @@ public static MessageBusImpl getInstance() {
 			if(messagesMap.get(tempServiceToUpdate).size()==0) {
 				synchronized (lock) {
 					messagesMap.get(tempServiceToUpdate).add(e);
-					System.out.println("need to wake up in send Broadcast");
 					lock.notifyAll();
 				}
 			}

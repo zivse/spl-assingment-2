@@ -39,6 +39,7 @@ public class TimeService extends MicroService{
 				}
 			};
 			timer.schedule(task,tickTime);
+
 			currentTime += 1;
 		}
 	}

@@ -38,6 +38,21 @@ public class Student {
         papersRead = 0;
     }
 
+    public int getPublications() {
+        return publications;
+    }
+
+    public void setPublications(int _publications){
+        publications= _publications;
+    }
+    public int getPapersRead(){
+        return papersRead;
+    }
+
+    public void setPapersRead(int papersRead) {
+        this.papersRead = papersRead;
+    }
+
     public void setModelsVector(Vector<Model> _modelsVector) {
         modelsVector = _modelsVector;
     }
@@ -46,5 +61,8 @@ public class Student {
             return "MSc";
         }
         return "PhD";
+    }
+    public Vector<Model> getModelVector(){
+        return modelsVector;
     }
 }

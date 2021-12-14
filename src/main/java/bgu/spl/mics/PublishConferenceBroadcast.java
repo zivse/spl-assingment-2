@@ -5,10 +5,16 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class PublishConferenceBroadcast implements Broadcast{
-    public PublishConferenceBroadcast(){
-    HashMap<Student, Vector<String>>ConnectStudentToArticles;
+    private HashMap<Student, Vector<String>>ConnectStudentToArticles;
+    private int totalPublishers;
+    public PublishConferenceBroadcast(HashMap<Student, Vector<String>>_ConnectStudentToArticles,int _totalPublishers){
+        ConnectStudentToArticles=_ConnectStudentToArticles;
+        totalPublishers=_totalPublishers;
     }
-    public void aggregateArticles(Student student){
-
+    public HashMap<Student, Vector<String>> getConnectStudentToArticles(){
+        return ConnectStudentToArticles;
+    }
+    public int getTotalPublishers(){
+        return totalPublishers;
     }
 }

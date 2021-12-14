@@ -1,10 +1,10 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.MicroService;
-import bgu.spl.mics.PublishResultsEvent;
-import bgu.spl.mics.TestModelEvent;
-import bgu.spl.mics.TrainModelEvent;
+import bgu.spl.mics.*;
+import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
+
+import java.util.Vector;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -24,8 +24,25 @@ public class StudentService extends MicroService {
 
     @Override
     protected void initialize() {
-        sendEvent(new PublishResultsEvent());
+        subscribeBroadcast(PublishConferenceBroadcast.class,event->{
+        if(event.getConnectStudentToArticles().get(student)==null){
+            student.setPapersRead(event.getTotalPublishers());
+        }
+        else{
+            Vector<String> models=event.getConnectStudentToArticles().get(student);
+            int modelsSize=models.size();
+            student.setPublications(modelsSize);
+            student.setPapersRead(event.getTotalPublishers()-modelsSize);
+        }
+        });
+        Vector<Model> tempModelsVector=student.getModelVector();
 
-
+        for(Model currentModel:tempModelsVector){
+            if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
+                if(sendEvent(new TestModelEvent()).get()=="Good"){
+                    sendEvent(new PublishResultsEvent(currentModel));
+                };
+            }
+        }
     }
 }

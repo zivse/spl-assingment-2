@@ -68,23 +68,19 @@ public class CRMSRunner {
                 counter++;
             }
         }
-        JsonArray ConferencesArray = object.get("Conferences").getAsJsonArray();
-        for(JsonElement confernces : ConferencesArray){
-            //TODO: complete parsing
 
-        }
         JsonArray CPUArray = object.get("CPUS").getAsJsonArray();
         for (JsonElement cpu: CPUArray){
             CPU Cpu = new CPU(cpu.getAsInt());
             cluster.addCPU(Cpu);
         }
-        /*JsonArray ConferencesArray = object.get("CPUS").getAsJsonArray();
+        JsonArray ConferencesArray = object.get("Conferences").getAsJsonArray();
         for(JsonElement conference : ConferencesArray){
             JsonObject conferenceObject = conference.getAsJsonObject();
             String conferenceName = conferenceObject.get("name").getAsString();
             int  conferenceDate = conferenceObject.get("date").getAsInt();
             ConfrenceInformation tempConf = new ConfrenceInformation(conferenceName, conferenceDate);
-        }*/
+        }
         int tickTime = object.get("TickTime").getAsInt();
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);

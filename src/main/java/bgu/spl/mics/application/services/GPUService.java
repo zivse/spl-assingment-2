@@ -27,11 +27,44 @@ private GPU gpu;
             @Override
             public void call(TickBroadcast c) {
                 gpu.updateTime();
-                System.out.println("subscribe");};
+              };
             });
-     //   subscribeEvent(TestModelEvent.class,callBack->{
+        subscribeEvent(TestModelEvent.class, new Callback<TestModelEvent>() {
+                    @Override
+                    public void call(TestModelEvent testModelEvent) {
+                        int range = 10+1;
+                        int prob= (int)(Math.random()*range);
+                        String typeStudent=gpu.getStudentFromGPU();
+                        String result="";
+                        if(typeStudent.compareTo("MSc")==0){
+                            if(prob<=6){
+                                result="Good";
+                                gpu.setModel("Good");
+                            }
+                            else{
+                                result="Bad";
+                                gpu.setModel("Bad");
+                            }
+                        }
+                        else{
+                            if(prob<=8){
+                                result= "Good";
+                                gpu.setModel("Good");
+                            }
+                            else{
+                                result="Bad";
+                                gpu.setModel("Bad");
+                            }
+                        }
+                        complete(testModelEvent,result);
 
-     //   });
-      //  subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate()); //for closing
+                    }});
+        subscribeEvent(TrainModelEvent.class, new Callback<TrainModelEvent>() {
+            @Override
+            public void call(TrainModelEvent c) {
+              gpu.splitData();
+            }
+        });
+                //  subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate()); //for closing
     }
 }

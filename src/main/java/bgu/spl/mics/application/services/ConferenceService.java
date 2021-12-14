@@ -5,6 +5,8 @@ import bgu.spl.mics.PublishConferenceBroadcast;
 import bgu.spl.mics.PublishResultsEvent;
 import bgu.spl.mics.TickBroadcast;
 import bgu.spl.mics.application.objects.ConfrenceInformation;
+import bgu.spl.mics.application.objects.Model;
+
 /**
  * Conference service is in charge of
  * aggregating good results and publishing them via the {@link PublishConfrenceBroadcast},
@@ -22,11 +24,16 @@ public class ConferenceService extends MicroService {
     }
     @Override
     protected void initialize() {
-        subscribeBroadcast(TickBroadcast.class, callBack -> {
+        subscribeBroadcast(TickBroadcast.class, (event) -> {
             conference.updateTime();
+            if(conference.getTime()==conference.getDate()){
+                sendBroadcast(new PublishConferenceBroadcast(conference.getConnectStudentToArticles(),conference.getTotalPublishers()));
+                terminate();
+            }
         });
-        subscribeEvent(PublishResultsEvent.class,callBack->{
-
+        subscribeEvent(PublishResultsEvent.class,(event)->{
+            Model model=event.getModel();
+            conference.setConnectStudentToArticles(model.getStudent(),model);
         });
 
     }

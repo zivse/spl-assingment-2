@@ -29,9 +29,10 @@ public class Future<T> {
      * @pre none
 	 * @post none
      */
-	public T get() throws InterruptedException{ //check the meaning
-		while(fResult == null){
+	public T get()  { //check the meaning
+		while (fResult == null) try {
 			wait();
+		} catch (InterruptedException ignore) {
 		}
 		return fResult;
 	}

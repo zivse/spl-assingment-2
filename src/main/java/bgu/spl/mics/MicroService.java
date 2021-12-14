@@ -137,6 +137,7 @@ public abstract class MicroService implements Runnable {
      */
     protected final void terminate() {
         this.terminated = true;
+        bus.unregister(this);
     }
 
     /**
@@ -158,7 +159,7 @@ public abstract class MicroService implements Runnable {
         while(!terminated){
             try {
                Message event= bus.awaitMessage(this);
-                Callback function= connectCallToEventHashMap.get(event);
+                Callback function= connectCallToEventHashMap.get(event.getClass());
                 function.call(event);
             }
             catch (InterruptedException e) {

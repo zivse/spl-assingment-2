@@ -57,4 +57,7 @@ public class Model {
     public Data getData(){
         return data;
     }
+    public Student getStudent(){
+        return student;
+    }
 }

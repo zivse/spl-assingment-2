@@ -21,7 +21,7 @@ public class CPUService extends MicroService {
     @Override
     protected void initialize() {
         Callback<TickBroadcast> callback = (TickBroadcast broadcast) -> cpu.notify();
-        subscribeBroadcast(TickBroadcast.class, callback);
+        subscribeBroadcast(TickBroadcast.class,callback );
         subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate());
     }
 
