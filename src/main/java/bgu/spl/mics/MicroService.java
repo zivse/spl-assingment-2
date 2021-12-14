@@ -157,7 +157,9 @@ public abstract class MicroService implements Runnable {
         initialize();
         while(!terminated){
             try {
-                connectCallToEventHashMap.get(bus.awaitMessage(this));
+               Message event= bus.awaitMessage(this);
+                Callback function= connectCallToEventHashMap.get(event);
+                function.call(event);
             }
             catch (InterruptedException e) {
             }

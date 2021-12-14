@@ -79,9 +79,12 @@ public static MessageBusImpl getInstance() {
 		Class bClass=b.getClass();
 		Vector<MicroService>relatedServices=microServices.get(bClass);
 		for(MicroService current:relatedServices){
-			if(messagesMap.get(current).size()==0){
-				messagesMap.get(current).add(b);
-				//lock.notifyAll();
+			if (messagesMap.get(current).size() == 0) {
+			synchronized (lock) {
+					messagesMap.get(current).add(b);
+					System.out.println("need to wake up in send Broadcast");
+					lock.notifyAll();
+				}
 			}
 			else{
 				messagesMap.get(current).add(b);
@@ -100,9 +103,12 @@ public static MessageBusImpl getInstance() {
 		else{
 			int indexOfChosenEvent=addCountRoundRobinPattern(eClass.getName(),relatedServices.size());
 			MicroService tempServiceToUpdate=relatedServices.get(indexOfChosenEvent);
-			if(messagesMap.get(tempServiceToUpdate).size()==0){
-				messagesMap.get(tempServiceToUpdate).add(e);
-				lock.notifyAll();
+			if(messagesMap.get(tempServiceToUpdate).size()==0) {
+				synchronized (lock) {
+					messagesMap.get(tempServiceToUpdate).add(e);
+					System.out.println("need to wake up in send Broadcast");
+					lock.notifyAll();
+				}
 			}
 			else{
 				messagesMap.get(tempServiceToUpdate).add(e);
