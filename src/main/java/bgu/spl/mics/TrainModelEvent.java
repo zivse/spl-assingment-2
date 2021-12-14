@@ -9,6 +9,6 @@ public class TrainModelEvent implements Event{
         modelToTrain = _model;
     }
     public Future getFuture(){
-    return future;
+        return future;
     }
 }

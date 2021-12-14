@@ -62,7 +62,7 @@ public class GPU {
 
         return indexCurrentData;
     }
-    public DataBatch splitData(MicroService m){
+    public DataBatch splitData(){
         int tempIndexCurrentData=indexCurrentData;
         indexCurrentData=indexCurrentData+1000;
         DataBatch dataToProcess=new DataBatch(model.getData(),tempIndexCurrentData,this);

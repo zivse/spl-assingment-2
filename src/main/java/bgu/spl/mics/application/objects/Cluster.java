@@ -19,15 +19,19 @@ public class Cluster {
 		cpusVector=new Vector<CPU>();
 	}
 	public void addCPU(CPU cpu){
+
 		cpusVector.add(cpu);
 	}
 	public void addGPU(GPU gpu){
+
 		gpusVector.add(gpu);
 	}
 public void processData(DataBatch dataToProcess){ //need to pick available cpu and tell him to process
-	cpusVector.get(0).proccessData(dataToProcess);
+
+		cpusVector.get(0).proccessData(dataToProcess);
 }
 public void trainData(DataBatch dataToTrain){
+
 	dataToTrain.getGPU().addData(dataToTrain);
 }
 

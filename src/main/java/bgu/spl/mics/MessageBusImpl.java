@@ -1,7 +1,6 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.objects.Cluster;
-
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -69,6 +68,7 @@ public static MessageBusImpl getInstance() {
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 	  e.getFuture().resolve(result);
+	  notifyAll();
 	}
 
 	@Override
