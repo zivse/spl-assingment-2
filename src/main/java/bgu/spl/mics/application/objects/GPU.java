@@ -93,6 +93,12 @@ public class GPU {
             timeForTraining--;
         }
     }
+    public void setModel(String result){
+        model.setResults(result);
+    }
+    public String getStudentFromGPU(){
+        return model.getStudentDegree();
+    }
     public void test(){
 
     }

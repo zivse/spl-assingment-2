@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.PublishResultsEvent;
+import bgu.spl.mics.TestModelEvent;
+import bgu.spl.mics.TrainModelEvent;
 import bgu.spl.mics.application.objects.Student;
 
 /**
@@ -13,14 +16,16 @@ import bgu.spl.mics.application.objects.Student;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class StudentService extends MicroService {
+    private Student student;
     public StudentService(Student student) {
-        super("Change_This_Name");
-        // TODO Implement this
+        super("StudentService");
+        this.student=student;
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
+        sendEvent(new PublishResultsEvent());
+
 
     }
 }

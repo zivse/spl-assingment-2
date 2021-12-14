@@ -1,5 +1,6 @@
 package bgu.spl.mics.application;
 import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.application.services.GPUService;
 import bgu.spl.mics.application.services.StudentService;
 import bgu.spl.mics.application.services.TimeService;
 import com.google.gson.*;
@@ -53,12 +54,24 @@ public class CRMSRunner {
             }
 
         }
+        int counter=0; //for tests
         Cluster cluster=new Cluster();
         JsonArray GPUArray = object.get("GPUS").getAsJsonArray();
         // System.out.println(GPUArray.toString());
         for (JsonElement gpu : GPUArray){
             GPU Gpu = new GPU(gpu.getAsString());
             cluster.addGPU(Gpu);
+            if(counter==0) { //for test
+                GPUService testService = new GPUService("test", Gpu);
+                Thread test = new Thread(testService);
+                test.start();
+                counter++;
+            }
+        }
+        JsonArray ConferencesArray = object.get("Conferences").getAsJsonArray();
+        for(JsonElement confernces : ConferencesArray){
+            //TODO: complete parsing
+
         }
         JsonArray CPUArray = object.get("CPUS").getAsJsonArray();
         for (JsonElement cpu: CPUArray){

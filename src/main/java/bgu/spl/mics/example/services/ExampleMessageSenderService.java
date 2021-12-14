@@ -6,7 +6,7 @@ import bgu.spl.mics.Future;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
 import bgu.spl.mics.example.messages.ExampleEvent;
-
+/*
 public class ExampleMessageSenderService extends MicroService {
 
     private boolean broadcast;
@@ -47,3 +47,4 @@ public class ExampleMessageSenderService extends MicroService {
     }
 
 }
+*/
