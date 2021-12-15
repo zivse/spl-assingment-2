@@ -20,9 +20,13 @@ public class GPU {
     private int indexCurrentData;
     private int memory;
     private Vector<DataBatch> dataToTrainVector;
+    private DataBatch currentDataToTrain;
     private int timeToTrainEachData;
     private int time;
+    int beginningTime;
     public GPU(String _type){
+        currentDataToTrain=null;
+        beginningTime=1;
         if(_type.compareTo("RTX3090")==0){
             type = Type.RTX3090;
         }
@@ -51,6 +55,19 @@ public class GPU {
         }
         time=1;
     }
+
+    public int getBeginningTime() {
+        return beginningTime;
+    }
+
+    public int getTimeToTrainEachData() {
+        return timeToTrainEachData;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
     public void updateTime(){
         time=time+1;
     }
