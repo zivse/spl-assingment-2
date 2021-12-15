@@ -2,6 +2,7 @@ package bgu.spl.mics.application.objects;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Passive object representing a single CPU.
@@ -11,7 +12,7 @@ import java.util.LinkedList;
 
 public class CPU {
     private int cores; //number of cores
-    private LinkedList<DataBatch> data; //the data the cpu currently procssing
+    private Vector<DataBatch> data; //the data the cpu currently procssing
     private Cluster cluster; //the compute
     int beginningTime;
     int time;
@@ -19,7 +20,7 @@ public class CPU {
     DataBatch currentDataBatch;
     public CPU(int _cores){
         cores=_cores;
-        data= new LinkedList<DataBatch>();
+        data= new Vector<>();
         cluster=cluster.getInstance();
         beginningTime=1;
         time=1;
@@ -27,7 +28,7 @@ public class CPU {
         currentDataBatch=null;
     }
 
-    public Cluster getCluster() {
+    public Cluster getCluster() {//why? there is only one cluster...
         return cluster;
     }
 
@@ -70,8 +71,8 @@ public class CPU {
         data.add(dataToProcess) ;
     }
     public void updateCurrentDataToProcess(){
-        data.removeFirst();
-        currentDataBatch=data.getFirst();
+        data.remove(0);
+        currentDataBatch=data.get(0);
     }
 }
 

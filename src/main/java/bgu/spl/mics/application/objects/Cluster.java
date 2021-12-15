@@ -1,7 +1,9 @@
 package bgu.spl.mics.application.objects;
 
 
+import java.util.Comparator;
 import java.util.Vector;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Passive object representing the cluster.
@@ -12,29 +14,48 @@ import java.util.Vector;
  */
 public class Cluster {
 	private static Cluster instance = null;
-	Vector<GPU>gpusVector;
-	Vector<CPU>cpusVector;
-	public Cluster(){
+	private Vector<GPU> gpusVector;
+	private PriorityBlockingQueue<CPU> cpuPriority;
+	private Cluster(){
 		gpusVector=new Vector<GPU>();
-		cpusVector=new Vector<CPU>();
 	}
-	public void addCPU(CPU cpu){
+	public void addCPU(Vector<CPU> cpuVector){
+		cpuPriority = new PriorityBlockingQueue(cpuVector.size(),new cpuComp());
+		cpuPriority.addAll(cpuVector);
+	}
+	private static class cpuComp implements Comparator<CPU>{
 
-		cpusVector.add(cpu);
+		public int compare(CPU cpu1, CPU cpu2) {
+
+			if (cpu1.getTime() > cpu2.getTime()) {
+				return 1;
+			} else if (cpu1.getTime() < cpu2.getTime()) {
+				return -1;
+			} else {
+				if (cpu1.getCores() > cpu2.getCores()) {
+					return -1;
+				} else if (cpu1.getCores() < cpu2.getCores()) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		}
+
 	}
 	public void addGPU(GPU gpu){
 
 		gpusVector.add(gpu);
 	}
 public void processData(DataBatch dataToProcess){ //need to pick available cpu and tell him to process
-		CPU c=new CPU(16); //need to choose smart TODO:implement this
-		DataBatch cpuCurrentDataBatch=c.getCurrentDataBatch();
+		CPU processCpu = cpuPriority.poll(); //need to choose smart TODO:implement this
+		DataBatch cpuCurrentDataBatch=processCpu.getCurrentDataBatch();
 		if(cpuCurrentDataBatch==null){
-			c.setCurrentDataBatch(dataToProcess);
-			c.setBeginningTime(c.getTime());
+			processCpu.setCurrentDataBatch(dataToProcess);
+			processCpu.setBeginningTime(processCpu.getTime());
 		}
-		c.addDataBatch(dataToProcess);
-		c.setActive();
+		processCpu.addDataBatch(dataToProcess);
+		processCpu.setActive();
 }
 public void trainData(DataBatch dataToTrain){
 
