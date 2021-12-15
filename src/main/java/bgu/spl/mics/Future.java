@@ -12,12 +12,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class Future<T> {
 	private T fResult;
+	private Object lock;
 	
 	/**
 	 * This should be the only public constructor in this class.
 	 */
 	public Future() {
 		fResult=null;
+		lock=new Object();
 	}
 	
 	/**
@@ -30,10 +32,14 @@ public class Future<T> {
 	 * @post none
      */
 	public T get()  { //check the meaning
-		while (fResult == null) try {
-			wait();
-		} catch (InterruptedException ignore) {
-		}
+		while (fResult == null)
+			synchronized(lock) {
+				try {
+					lock.wait();
+				} catch (InterruptedException ignore) {
+				}
+
+			}
 		return fResult;
 	}
 

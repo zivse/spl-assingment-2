@@ -31,7 +31,7 @@ public class CRMSRunner {
         JsonObject object = tree.getAsJsonObject();
         JsonArray students = object.get("Students").getAsJsonArray();
 
-
+int counterStudent=0;//for test
         for(JsonElement studentElement : students){
             JsonObject studentObject = studentElement.getAsJsonObject();
             String studentName = studentObject.get("name").getAsString();
@@ -39,8 +39,11 @@ public class CRMSRunner {
             String  studentStatus = studentObject.get("status").getAsString();
             Vector<Model> modelsVector = new Vector<>();
             Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
+            if(counterStudent==0){ //for test
             StudentService studentService = new StudentService(student);
             Thread studentServiceThread = new Thread(studentService);
+            studentServiceThread.start();
+                counterStudent++;} //for test
             JsonArray models = studentObject.get("models").getAsJsonArray();
             for(JsonElement model : models){
                 JsonObject modelObject = model.getAsJsonObject();

@@ -37,11 +37,11 @@ public class StudentService extends MicroService {
         });
         Vector<Model> tempModelsVector=student.getModelVector();
 
-        for(Model currentModel:tempModelsVector){
+             for(Model currentModel:tempModelsVector){
             if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
-                if(sendEvent(new TestModelEvent()).get()=="Good"){
-                    sendEvent(new PublishResultsEvent(currentModel));
-                };
+           //     if(sendEvent(new TestModelEvent()).get()=="Good"){
+          //          sendEvent(new PublishResultsEvent(currentModel));
+            //    };
             }
         }
     }
