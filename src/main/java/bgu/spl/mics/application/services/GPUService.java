@@ -62,7 +62,7 @@ private GPU gpu;
         subscribeEvent(TrainModelEvent.class, new Callback<TrainModelEvent>() {
             @Override
             public void call(TrainModelEvent c) {
-                gpu.setModel(c.);
+                gpu.setModel(c.getModel());
               gpu.splitData();
             }
         });

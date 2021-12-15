@@ -39,9 +39,9 @@ public class StudentService extends MicroService {
 
              for(Model currentModel:tempModelsVector){
             if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
-           //     if(sendEvent(new TestModelEvent()).get()=="Good"){
-          //          sendEvent(new PublishResultsEvent(currentModel));
-            //    };
+                if(sendEvent(new TestModelEvent()).get()=="Good"){
+                    sendEvent(new PublishResultsEvent(currentModel));
+                };
             }
         }
     }

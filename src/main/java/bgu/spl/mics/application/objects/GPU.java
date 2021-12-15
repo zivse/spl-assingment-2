@@ -58,9 +58,8 @@ public class GPU {
         model=currentModel;
         indexCurrentData=0;
     }
-    public int getIndexCurrentData(){
-
-        return indexCurrentData;
+    public void addData(DataBatch dataToTrain) {
+        dataToTrainVector.add(dataToTrain);
     }
     public DataBatch splitData(){
         int tempIndexCurrentData=indexCurrentData;
@@ -69,41 +68,31 @@ public class GPU {
         cluster.processData(dataToProcess);
         return dataToProcess;
     }
-    public void addData(DataBatch dataToTrain) {
-        dataToTrainVector.add(dataToTrain);
-    }
-    public void trainDataLoop(MicroService m) throws InterruptedException {
-        while (true) {
-            DataBatch dataToTrain;
-            try {
-                dataToTrain = dataToTrainVector.remove(0);
-            } catch (ArrayIndexOutOfBoundsException ignore) {
-                dataToTrain = null;
-            }
-            while (dataToTrain == null) {
-                m.wait();
-            }
-            trainData(dataToTrain,m);
-        }
-    }
-    public void trainData(DataBatch dataToTrain,MicroService m) throws InterruptedException {
-        int timeForTraining=timeToTrainEachData;
-        while(timeForTraining>0){
-            m.wait();
-            timeForTraining--;
-        }
-    }
     public void setModel(String result){
         model.setResults(result);
     }
     public String getStudentFromGPU(){
         return model.getStudentDegree();
     }
-    public void test(){
-
-    }
-    public void initializeWork(Model currentModel){
-        setModel(currentModel);
-    }
-
 }
+//public void trainData(DataBatch dataToTrain,MicroService m) throws InterruptedException {
+//        int timeForTraining=timeToTrainEachData;
+//        while(timeForTraining>0){
+//            m.wait();
+//            timeForTraining--;
+//        }
+//    }
+//    public void trainDataLoop(MicroService m) throws InterruptedException {
+//        while (true) {
+//            DataBatch dataToTrain;
+//            try {
+//                dataToTrain = dataToTrainVector.remove(0);
+//            } catch (ArrayIndexOutOfBoundsException ignore) {
+//                dataToTrain = null;
+//            }
+//            while (dataToTrain == null) {
+//                m.wait();
+//            }
+//            trainData(dataToTrain,m);
+//        }
+//    }

@@ -14,49 +14,103 @@ public class CPU {
     private LinkedList<DataBatch> data; //the data the cpu currently procssing
     private Cluster cluster; //the compute
     int beginningTime;
+    int time;
+    boolean isActive;
+    DataBatch currentDataBatch;
     public CPU(int _cores){
         cores=_cores;
         data= new LinkedList<DataBatch>();
         cluster=cluster.getInstance();
-        beginningTime=0;
-    }
-    public Boolean proccessData(DataBatch dataBatch){
-        Data.Type type = dataBatch.getDataFromBath().getType();
-        switch (type){
-            case Tabular:{
-                for(int i=0; i< 1*(32/cores); i++){
-                    try{
-                        this.wait();
-                    }
-                    catch (InterruptedException ignored){
-                    }
-                }
-                break;
-            }
-            case Text: {
-                for (int i = 0; i < 2 * (32 / cores); i++) {
-                    try {
-                        this.wait();
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-                break;
-
-            }
-            case Images:{
-                for(int i=0; i< 4*(32/cores); i++){
-                    try{
-                        this.wait();
-                    }
-                    catch (InterruptedException ignored){
-                    }
-                }
-                break;
-            }
-        }
-        cluster.trainData(dataBatch);
-        return true;
+        beginningTime=1;
+        time=1;
+        isActive=false;
+        currentDataBatch=null;
     }
 
+    public Cluster getCluster() {
+        return cluster;
+    }
 
+    public DataBatch getCurrentDataBatch() {
+        return currentDataBatch;
+    }
+
+    public int getBeginningTime() {
+        return beginningTime;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+    public int getCores(){
+        return cores;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setActive() {
+        isActive=true;
+    }
+
+    public void setBeginningTime(int beginningTime) {
+        isActive=true;
+        this.beginningTime = beginningTime;
+    }
+
+    public void updateTime() {
+        time=time++;
+    }
+
+    public void setCurrentDataBatch(DataBatch currentDataBatch) {
+        this.currentDataBatch = currentDataBatch;
+    }
+    public void addDataBatch(DataBatch dataToProcess){
+        data.add(dataToProcess) ;
+    }
+    public void updateCurrentDataToProcess(){
+        data.removeFirst();
+        currentDataBatch=data.getFirst();
+    }
 }
+
+
+
+//    public Boolean proccessData(DataBatch dataBatch){
+//        Data.Type type = dataBatch.getDataFromBath().getType();
+//        switch (type){
+//            case Tabular:{
+//                for(int i=0; i< 1*(32/cores); i++){
+//                    try{
+//                        this.wait();
+//                    }
+//                    catch (InterruptedException ignored){
+//                    }
+//                }
+//                break;
+//            }
+//            case Text: {
+//                for (int i = 0; i < 2 * (32 / cores); i++) {
+//                    try {
+//                        this.wait();
+//                    } catch (InterruptedException ignored) {
+//                    }
+//                }
+//                break;
+//
+//            }
+//            case Images:{
+//                for(int i=0; i< 4*(32/cores); i++){
+//                    try{
+//                        this.wait();
+//                    }
+//                    catch (InterruptedException ignored){
+//                    }
+//                }
+//                break;
+//            }
+//        }
+//        cluster.trainData(dataBatch);
+//        return true;
+//    }

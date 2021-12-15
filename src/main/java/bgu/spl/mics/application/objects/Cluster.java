@@ -27,8 +27,14 @@ public class Cluster {
 		gpusVector.add(gpu);
 	}
 public void processData(DataBatch dataToProcess){ //need to pick available cpu and tell him to process
-
-		cpusVector.get(0).proccessData(dataToProcess);
+		CPU c=new CPU(16); //need to choose smart TODO:implement this
+		DataBatch cpuCurrentDataBatch=c.getCurrentDataBatch();
+		if(cpuCurrentDataBatch==null){
+			c.setCurrentDataBatch(dataToProcess);
+			c.setBeginningTime(c.getTime());
+		}
+		c.addDataBatch(dataToProcess);
+		c.setActive();
 }
 public void trainData(DataBatch dataToTrain){
 
