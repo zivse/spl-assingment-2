@@ -23,12 +23,6 @@ private GPU gpu;
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(TickBroadcast.class, new Callback<TickBroadcast>() {
-            @Override
-            public void call(TickBroadcast c) {
-                gpu.updateTime();
-              };
-            });
         subscribeEvent(TestModelEvent.class, new Callback<TestModelEvent>() {
                     @Override
                     public void call(TestModelEvent testModelEvent) {

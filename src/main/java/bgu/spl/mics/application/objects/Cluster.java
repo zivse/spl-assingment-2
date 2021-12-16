@@ -58,8 +58,14 @@ public void processData(DataBatch dataToProcess){ //need to pick available cpu a
 		processCpu.setActive();
 }
 public void trainData(DataBatch dataToTrain){
-
-	dataToTrain.getGPU().addData(dataToTrain);
+		GPU gpuToTrain=dataToTrain.getGPU();
+	    DataBatch gpuCurrentDataBatch=gpuToTrain.getCurrentDataToTrain();
+	if(gpuCurrentDataBatch==null){
+		gpuToTrain.setGpuCurrentDataBatch(dataToTrain);
+		gpuToTrain.setBeginningTime(gpuToTrain.getTime());
+	}
+	gpuToTrain.addData(dataToTrain);
+	gpuToTrain.setActiveTrain(true);
 }
 
 	/**

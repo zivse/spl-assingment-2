@@ -16,7 +16,7 @@ public class GPU {
     private Type type;
     private Model model;//the model the gpu is currently working on
     private Cluster cluster;
-    private int alreadyTrainedData;
+    private int alreadyTrainedDataTime;
     private int indexCurrentData;
     private int memory;
     private Vector<DataBatch> dataToTrainVector;
@@ -24,9 +24,18 @@ public class GPU {
     private int timeToTrainEachData;
     private int time;
     int beginningTime;
+    private boolean activeTrain;
+    private DataBatch gpuCurrentDataBatch;
     public GPU(String _type){
+        gpuCurrentDataBatch=null;
+        activeTrain=false;
         currentDataToTrain=null;
         beginningTime=1;
+        alreadyTrainedDataTime=0;
+        model = null;
+        cluster=cluster.getInstance();
+        indexCurrentData=0;
+        dataToTrainVector=new Vector<DataBatch>();
         if(_type.compareTo("RTX3090")==0){
             type = Type.RTX3090;
         }
@@ -36,11 +45,6 @@ public class GPU {
         else{
             type = Type.GTX1080;
         }
-        alreadyTrainedData=0;
-        model = null;
-        cluster=cluster.getInstance();
-        indexCurrentData=0;
-        dataToTrainVector=new Vector<DataBatch>();
         if(_type.compareTo("RTX3090")==0){
             memory=32;
             timeToTrainEachData=1;
@@ -56,6 +60,26 @@ public class GPU {
         time=1;
     }
 
+    public void setGpuCurrentDataBatch(DataBatch gpuCurrentDataBatch) {
+        this.gpuCurrentDataBatch = gpuCurrentDataBatch;
+    }
+
+    public DataBatch getCurrentDataToTrain() {
+        return currentDataToTrain;
+    }
+
+    public void updateAlreadyTrainedData() {
+        this.alreadyTrainedDataTime = alreadyTrainedDataTime+timeToTrainEachData;
+    }
+
+    public boolean getIsActiveTrain() {
+        return activeTrain;
+    }
+
+    public void setActiveTrain(boolean activeTrain) {
+        this.activeTrain = activeTrain;
+    }
+
     public int getBeginningTime() {
         return beginningTime;
     }
@@ -66,6 +90,10 @@ public class GPU {
 
     public int getTime() {
         return time;
+    }
+
+    public void setBeginningTime(int beginningTime) {
+        this.beginningTime = beginningTime;
     }
 
     public void updateTime(){

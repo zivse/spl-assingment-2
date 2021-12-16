@@ -18,7 +18,9 @@ public class CPU {
     int time;
     boolean isActive;
     DataBatch currentDataBatch;
+    int alreadyTrainedDataTime;
     public CPU(int _cores){
+        alreadyTrainedDataTime=0;
         cores=_cores;
         data= new Vector<>();
         cluster=cluster.getInstance();
@@ -27,7 +29,9 @@ public class CPU {
         isActive=false;
         currentDataBatch=null;
     }
-
+    public int getAlreadyTrainedDataTime() {
+        return alreadyTrainedDataTime;
+    }
     public Cluster getCluster() {//why? there is only one cluster...
         return cluster;
     }
