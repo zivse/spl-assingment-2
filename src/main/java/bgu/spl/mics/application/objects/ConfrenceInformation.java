@@ -17,7 +17,7 @@ public class ConfrenceInformation {
         date=_date;
         name=_name;
         time =1;
-      ConnectStudentToArticles=new HashMap<Student, Vector<String>>();
+      ConnectStudentToArticles = new HashMap<Student, Vector<String>>();
     }
     public void setConnectStudentToArticles(Student student,Model model){
         if(ConnectStudentToArticles.get(student)==null){
@@ -46,5 +46,10 @@ public class ConfrenceInformation {
 
     public int getTotalPublishers() {
         return totalPublishers;
+    }
+    public String toString(){
+        String confrenceString = "";
+        confrenceString += "conferences: " + "\n" + "name: " + name + "\n" + "date" + date + "\n" + "publications" +  "\n"+ ConnectStudentToArticles.toString();
+        return confrenceString;
     }
 }

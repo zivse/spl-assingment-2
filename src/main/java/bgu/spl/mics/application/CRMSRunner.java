@@ -42,11 +42,12 @@ int counterStudent=0;//for test
             String  studentStatus = studentObject.get("status").getAsString();
             Vector<Model> modelsVector = new Vector<>();
             Student student = new Student(studentName, studentDepartment, studentStatus, modelsVector);
+            System.out.println(student.toString());
             studentsVector.add(student);
             if(counterStudent==0){ //for test
             StudentService studentService = new StudentService(student);
             Thread studentServiceThread = new Thread(studentService);
-                studentServiceThread.start();
+              //  studentServiceThread.start();
                 counterStudent++;} //for test
             JsonArray models = studentObject.get("models").getAsJsonArray();
             for(JsonElement model : models){
@@ -93,12 +94,12 @@ int counterStudent=0;//for test
             ConfrenceInformation tempConf = new ConfrenceInformation(conferenceName, conferenceDate);
             confrenceInformationsVector.add(tempConf);
         }
-        int tickTime = object.get("TickTime").getAsInt();
-        int duration = object.get("Duration").getAsInt();
-        TimeService timeService = new TimeService(tickTime, duration);
-        Thread test2=new Thread(timeService);
-        test2.start();
-
+//        int tickTime = object.get("TickTime").getAsInt();
+//        int duration = object.get("Duration").getAsInt();
+//        TimeService timeService = new TimeService(tickTime, duration);
+//        Thread test2=new Thread(timeService);
+//        test2.start();
+//
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter("Output.txt");

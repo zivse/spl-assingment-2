@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.objects;
 
-import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -64,5 +63,15 @@ public class Student {
     }
     public Vector<Model> getModelVector(){
         return modelsVector;
+    }
+
+    public String toString(){
+        String studentString = "";
+        studentString  += "students :\n" + "name: " + name + "\n" + "department: " + department + "\n" + "status: " + status + "\n" + "publications" + publications + "\n" + "papersRead: " + papersRead +"\n" + "trainedModels: " + "\n";
+        for(Model model : modelsVector){
+            studentString += model.toString();
+        }
+        return studentString;
+
     }
 }

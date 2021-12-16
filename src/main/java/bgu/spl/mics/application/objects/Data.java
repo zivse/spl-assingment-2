@@ -34,4 +34,10 @@ public class Data {
         return type;
     }
 
+    public String toString(){
+        String dataString = "";
+        dataString += "type: " + type + "\n" + "size: " + size +"\n";
+        return dataString;
+    }
+
 }
