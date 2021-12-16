@@ -3,6 +3,9 @@ package bgu.spl.mics;
 import bgu.spl.mics.application.objects.Cluster;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -12,10 +15,10 @@ import java.util.Vector;
 public class MessageBusImpl implements MessageBus {
 	private HashMap<Class<? extends Message>, Vector<MicroService>> microServices;
 	private HashMap <Message, Future>  futures;
-	private HashMap<MicroService , Vector<Message>> messagesMap;
-	private int RRPTrainModelEventCounter;//round Robin Pattern Train Model Event Counter
-	private int RRPTestModelEventCounter;//round Robin Pattern Test Model Event Counter
-	private int RRPPublishResultsEventCounter;//round Robin Pattern Publish Results Event Counter
+	private HashMap<MicroService , BlockingDeque<Message>> messagesMap;
+	private AtomicInteger RRPTrainModelEventCounter;//round Robin Pattern Train Model Event Counter
+	private AtomicInteger RRPTestModelEventCounter;//round Robin Pattern Test Model Event Counter
+	private AtomicInteger RRPPublishResultsEventCounter;//round Robin Pattern Publish Results Event Counter
 	private static MessageBusImpl instance = null;
 	private static Object lock=new Object();
 
@@ -28,10 +31,10 @@ public MessageBusImpl(){
 	microServices.put(TickBroadcast.class,new Vector<MicroService>());
 	microServices.put(TerminateBroadcast.class,new Vector<MicroService>());
 	futures=new HashMap<Message, Future>();
-	messagesMap =new HashMap<MicroService , Vector<Message>>();
-	RRPTrainModelEventCounter=0;
-	RRPTestModelEventCounter=0;
-	RRPPublishResultsEventCounter=0;
+	messagesMap =new HashMap<MicroService , BlockingDeque<Message>>();
+	RRPTrainModelEventCounter=new AtomicInteger();
+	RRPTestModelEventCounter=new AtomicInteger();
+	RRPPublishResultsEventCounter=new AtomicInteger();
 }
 public static MessageBusImpl getInstance() {
 		if(instance == null){
@@ -39,24 +42,6 @@ public static MessageBusImpl getInstance() {
 		}
 		return instance;
 	}
-//this methode need to be thread safe!!!!!
-	private int addCountRoundRobinPattern(String EventName,int numOfServices){ //get event name and size of the services vector and update the counter of the related services pattern and return the counter before update
-	int tempCounter=0;
-	if(EventName.compareTo("TrainModelEvent")==0){
-		tempCounter=RRPTrainModelEventCounter;
-			RRPTrainModelEventCounter=(RRPTrainModelEventCounter+1)%numOfServices;
-	}
-	else if(EventName.compareTo("TestModelEvent")==0){
-		tempCounter=RRPTestModelEventCounter;
-		RRPTestModelEventCounter=(RRPTestModelEventCounter+1)%numOfServices;
-	}
-	else {
-			tempCounter=RRPPublishResultsEventCounter;
-		RRPPublishResultsEventCounter=(RRPPublishResultsEventCounter+1)%numOfServices;
-	}
-	return tempCounter;
-	}
-
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 
@@ -71,7 +56,6 @@ public static MessageBusImpl getInstance() {
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 	  e.getFuture().resolve(result);
-	  notifyAll();
 	}
 
 	@Override
@@ -79,19 +63,11 @@ public static MessageBusImpl getInstance() {
 		Class bClass=b.getClass();
 		Vector<MicroService>relatedServices=microServices.get(bClass);
 		for(MicroService current:relatedServices){
-			if (messagesMap.get(current).size() == 0) {
-			synchronized (lock) {
-					messagesMap.get(current).add(b);
-					lock.notifyAll();
-				}
-			}
-			else{
 				messagesMap.get(current).add(b);
-			}
 		}
 	}
 
-	
+
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
 		Class eClass=e.getClass();
@@ -100,25 +76,25 @@ public static MessageBusImpl getInstance() {
 			return null;
 		}
 		else{
-			int indexOfChosenEvent=addCountRoundRobinPattern(eClass.getName(),relatedServices.size());
-			MicroService tempServiceToUpdate=relatedServices.get(indexOfChosenEvent);
-			if(messagesMap.get(tempServiceToUpdate).size()==0) {
-				synchronized (lock) {
-					messagesMap.get(tempServiceToUpdate).add(e);
-					lock.notifyAll();
+			synchronized(lock) {
+				String EventName = eClass.getName();
+				int numOfServices=microServices.get(eClass).size();
+				if (EventName.compareTo("TrainModelEvent") == 0) {
+					messagesMap.get(RRPTrainModelEventCounter.getAndIncrement()%numOfServices).add(e);
+				} else if (EventName.compareTo("TestModelEvent") == 0) {
+					messagesMap.get(RRPTestModelEventCounter.getAndIncrement()%numOfServices).add(e);
+				} else {
+					messagesMap.get(RRPPublishResultsEventCounter.getAndIncrement()%numOfServices).add(e);
 				}
+				Future<T> future = new Future<T>();
+				return future;
 			}
-			else{
-				messagesMap.get(tempServiceToUpdate).add(e);
-			}
-			Future<T>future=new Future<T>();
-			return future;
 		}
 	}
 
 	@Override
 	public void register(MicroService m) {
-		messagesMap.put(m,new Vector<Message>());
+		messagesMap.put(m, new LinkedBlockingDeque<Message>());
 	}
 
 	@Override
@@ -130,48 +106,8 @@ public static MessageBusImpl getInstance() {
 	}
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		Vector<Message> tempMessagesVector = messagesMap.get(m);
+		BlockingDeque<Message> tempMessagesVector = messagesMap.get(m);
 		// TODO check for null  nir
-
-		while (true) {
-			Message message;
-			try {
-				message = tempMessagesVector.remove(0);
-			} catch (ArrayIndexOutOfBoundsException ignore) {
-				message = null;
-			}
-
-			if (message != null) {
-				return message;
-			}
-			synchronized(lock) {
-				try {
-					lock.wait();
-				} catch (InterruptedException e) {
-				}
-			}
-
-		}
+			return tempMessagesVector.takeFirst();
 	}
-
-
-/*
-	//for test
-	public<T>boolean checkIsReallyAddedSub(Class<? extends Event<T>> eventType, MicroService micro){
-		return messagesMap.get(eventType).contains(micro);
-	}
-	public<T>boolean checkisReallyAddedSubBroad(Class<? extends Broadcast> eventType, MicroService micro){
-			return microServices.get(eventType).contains(micro);
-	}
-	public boolean hasBro(Broadcast bro, MicroService micro){
-			return microServices.get(micro).contains(bro);
-	}
-	public<T> boolean conEvent(Event<T> event, MicroService micro){
-		return microServices.get(micro).contains(event);
-	}
-	public boolean registerIsTrue(MicroService micro){
-			return messagesMap.containsKey(micro);
-
-	}
-*/
 }

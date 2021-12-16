@@ -101,7 +101,7 @@ int counterStudent=0;//for test
 
         FileWriter fileWriter = null;
         try {
-            fileWriter = new FileWriter("Output.json");
+            fileWriter = new FileWriter("Output.txt");
             fileWriter.write(studentsVector.toString());
             fileWriter.write(confrenceInformationsVector.toString());
             //add all the information
