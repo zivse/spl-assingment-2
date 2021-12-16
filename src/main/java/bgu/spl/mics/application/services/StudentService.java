@@ -35,6 +35,12 @@ public class StudentService extends MicroService {
             student.setPapersRead(event.getTotalPublishers()-modelsSize);
         }
         });
+        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
+            @Override
+            public void call(TerminateBroadcast c) {
+                terminate();
+            }
+        });
         Vector<Model> tempModelsVector=student.getModelVector();
 
              for(Model currentModel:tempModelsVector){
@@ -44,5 +50,6 @@ public class StudentService extends MicroService {
                 };
             }
         }
+
     }
 }

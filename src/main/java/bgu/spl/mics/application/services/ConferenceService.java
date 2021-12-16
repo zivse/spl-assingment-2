@@ -1,9 +1,6 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.MicroService;
-import bgu.spl.mics.PublishConferenceBroadcast;
-import bgu.spl.mics.PublishResultsEvent;
-import bgu.spl.mics.TickBroadcast;
+import bgu.spl.mics.*;
 import bgu.spl.mics.application.objects.ConfrenceInformation;
 import bgu.spl.mics.application.objects.Model;
 
@@ -35,6 +32,13 @@ public class ConferenceService extends MicroService {
             Model model=event.getModel();
             conference.setConnectStudentToArticles(model.getStudent(),model);
         });
+        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
+            @Override
+            public void call(TerminateBroadcast c) {
+                terminate();
+            }
+        });
 
     }
+
 }

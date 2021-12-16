@@ -63,7 +63,11 @@ public class CPUService extends MicroService {
             }
         } ;
         subscribeBroadcast(TickBroadcast.class,callback );
-        subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate());
-    }
+        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
+            @Override
+            public void call(TerminateBroadcast c) {
+                terminate();
+            }
+        });
 
-}
+}}

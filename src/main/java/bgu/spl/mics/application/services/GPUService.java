@@ -60,6 +60,11 @@ private GPU gpu;
               gpu.splitData();
             }
         });
-                //  subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast broadcastTerminate) -> this.terminate()); //for closing
+        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
+            @Override
+            public void call(TerminateBroadcast c) {
+                terminate();
+            }
+        });
     }
 }
