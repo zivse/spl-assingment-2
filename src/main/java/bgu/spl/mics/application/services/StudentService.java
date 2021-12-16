@@ -5,6 +5,7 @@ import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
 
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -17,14 +18,14 @@ import java.util.Vector;
  */
 public class StudentService extends MicroService {
     private Student student;
-    public StudentService(Student student) {
-        super("StudentService");
+    public StudentService(Student student, CountDownLatch countDown) {
+        super("StudentService",countDown);
         this.student=student;
     }
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(PublishConferenceBroadcast.class,event->{
+        subscribeBroadcast(PublishConferenceBroadcast.class,(PublishConferenceBroadcast event)->{
         if(event.getConnectStudentToArticles().get(student)==null){
             student.setPapersRead(event.getTotalPublishers());
         }
@@ -35,11 +36,8 @@ public class StudentService extends MicroService {
             student.setPapersRead(event.getTotalPublishers()-modelsSize);
         }
         });
-        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
-            @Override
-            public void call(TerminateBroadcast c) {
+        subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();
-            }
         });
         Vector<Model> tempModelsVector=student.getModelVector();
 

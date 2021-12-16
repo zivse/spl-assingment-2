@@ -40,4 +40,7 @@ public class Data {
         return dataString;
     }
 
+    public int getSize() {
+        return size;
+    }
 }

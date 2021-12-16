@@ -5,6 +5,7 @@ import bgu.spl.mics.application.objects.GPU;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * GPU service is responsible for handling the
@@ -16,16 +17,14 @@ import java.util.TimerTask;
  */
 public class GPUService extends MicroService {
 private GPU gpu;
-    public GPUService(String name,GPU _gpu) {
-        super(name);
+    public GPUService(String name, GPU _gpu, CountDownLatch countDown) {
+        super(name,countDown);
         gpu=_gpu;
     }
 
     @Override
     protected void initialize() {
-        subscribeEvent(TestModelEvent.class, new Callback<TestModelEvent>() {
-                    @Override
-                    public void call(TestModelEvent testModelEvent) {
+        subscribeEvent(TestModelEvent.class, (TestModelEvent testModelEvent)-> {
                         int range = 10+1;
                         int prob= (int)(Math.random()*range);
                         String typeStudent=gpu.getStudentFromGPU();
@@ -52,19 +51,13 @@ private GPU gpu;
                         }
                         complete(testModelEvent,result);
 
-                    }});
-        subscribeEvent(TrainModelEvent.class, new Callback<TrainModelEvent>() {
-            @Override
-            public void call(TrainModelEvent c) {
-                gpu.setModel(c.getModel());
+                    });
+        subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
+              gpu.setModel(c.getModel());
               gpu.splitData();
-            }
         });
-        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
-            @Override
-            public void call(TerminateBroadcast c) {
+        subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();
-            }
         });
     }
 }

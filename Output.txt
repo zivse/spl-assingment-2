@@ -1,1 +1,141 @@
-[students :/nname: Simba/ndepartment: Computer Science/nstatus: MSc/npublications0/npapersRead: 0trainedModels: /nname: YOLO10/ndata: type: Tabular/nsize: 200000/n/nstatus: PreTrained/nresults: Nonename: ResNet9000/ndata: type: Tabular/nsize: 200000/n/nstatus: PreTrained/nresults: Nonename: LessEfficientNet/ndata: type: Tabular/nsize: 20000/n/nstatus: PreTrained/nresults: Nonename: DensestNet/ndata: type: Tabular/nsize: 200000/n/nstatus: PreTrained/nresults: None, students :/nname: Zazu/ndepartment: EE/nstatus: PhD/npublications0/npapersRead: 0trainedModels: /nname: VIT/ndata: type: Tabular/nsize: 100000000/n/nstatus: PreTrained/nresults: None, students :/nname: Pumba/ndepartment: Computer Science/nstatus: PhD/npublications0/npapersRead: 0trainedModels: /nname: Bert/ndata: type: Text/nsize: 1000000/n/nstatus: PreTrained/nresults: Nonename: GPT4/ndata: type: Text/nsize: 1000000/n/nstatus: PreTrained/nresults: Nonename: GPT5/ndata: type: Text/nsize: 200000/n/nstatus: PreTrained/nresults: Nonename: GPT10/ndata: type: Text/nsize: 50000/n/nstatus: PreTrained/nresults: None, students :/nname: Timon/ndepartment: SE/nstatus: PhD/npublications0/npapersRead: 0trainedModels: /nname: Percepetron/ndata: type: Tabular/nsize: 1000000/n/nstatus: PreTrained/nresults: Nonename: GNN/ndata: type: Tabular/nsize: 1000000/n/nstatus: PreTrained/nresults: Nonename: MoreStyleGAN/ndata: type: Images/nsize: 100000/n/nstatus: PreTrained/nresults: Nonename: ConditionalGAN/ndata: type: Images/nsize: 500000/n/nstatus: PreTrained/nresults: None, students :/nname: Nala/ndepartment: Computer Science/nstatus: PhD/npublications0/npapersRead: 0trainedModels: /nname: YOLO9000/ndata: type: Tabular/nsize: 100000/n/nstatus: PreTrained/nresults: Nonename: VIT2/ndata: type: Tabular/nsize: 1000000/n/nstatus: PreTrained/nresults: Nonename: MuchMoreEfficientNet/ndata: type: Tabular/nsize: 20000/n/nstatus: PreTrained/nresults: Nonename: DenserNet/ndata: type: Tabular/nsize: 100000/n/nstatus: PreTrained/nresults: None][bgu.spl.mics.application.objects.ConfrenceInformation@34a245ab, bgu.spl.mics.application.objects.ConfrenceInformation@7cc355be, bgu.spl.mics.application.objects.ConfrenceInformation@6e8cf4c6, bgu.spl.mics.application.objects.ConfrenceInformation@12edcd21, bgu.spl.mics.application.objects.ConfrenceInformation@34c45dca]
+[students :
+name: Simba
+department: Computer Science
+status: MSc
+publications0
+papersRead: 0
+trainedModels: 
+name: YOLO10
+data: type: Tabular
+size: 200000
+
+status: PreTrained
+results: Nonename: ResNet9000
+data: type: Tabular
+size: 200000
+
+status: PreTrained
+results: Nonename: LessEfficientNet
+data: type: Tabular
+size: 20000
+
+status: PreTrained
+results: Nonename: DensestNet
+data: type: Tabular
+size: 200000
+
+status: PreTrained
+results: None, students :
+name: Zazu
+department: EE
+status: PhD
+publications0
+papersRead: 0
+trainedModels: 
+name: VIT
+data: type: Tabular
+size: 100000000
+
+status: PreTrained
+results: None, students :
+name: Pumba
+department: Computer Science
+status: PhD
+publications0
+papersRead: 0
+trainedModels: 
+name: Bert
+data: type: Text
+size: 1000000
+
+status: PreTrained
+results: Nonename: GPT4
+data: type: Text
+size: 1000000
+
+status: PreTrained
+results: Nonename: GPT5
+data: type: Text
+size: 200000
+
+status: PreTrained
+results: Nonename: GPT10
+data: type: Text
+size: 50000
+
+status: PreTrained
+results: None, students :
+name: Timon
+department: SE
+status: PhD
+publications0
+papersRead: 0
+trainedModels: 
+name: Percepetron
+data: type: Tabular
+size: 1000000
+
+status: PreTrained
+results: Nonename: GNN
+data: type: Tabular
+size: 1000000
+
+status: PreTrained
+results: Nonename: MoreStyleGAN
+data: type: Images
+size: 100000
+
+status: PreTrained
+results: Nonename: ConditionalGAN
+data: type: Images
+size: 500000
+
+status: PreTrained
+results: None, students :
+name: Nala
+department: Computer Science
+status: PhD
+publications0
+papersRead: 0
+trainedModels: 
+name: YOLO9000
+data: type: Tabular
+size: 100000
+
+status: PreTrained
+results: Nonename: VIT2
+data: type: Tabular
+size: 1000000
+
+status: PreTrained
+results: Nonename: MuchMoreEfficientNet
+data: type: Tabular
+size: 20000
+
+status: PreTrained
+results: Nonename: DenserNet
+data: type: Tabular
+size: 100000
+
+status: PreTrained
+results: None][conferences: 
+name: ICML
+date2000
+publications
+{}, conferences: 
+name: NeurIPS
+date2500
+publications
+{}, conferences: 
+name: CVPR
+date3000
+publications
+{}, conferences: 
+name: ECCV
+date4000
+publications
+{}, conferences: 
+name: AISTATS
+date5000
+publications
+{}]

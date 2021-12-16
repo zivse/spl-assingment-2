@@ -9,6 +9,10 @@ import java.util.Vector;
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
 public class GPU {
+    public void incrementMemoryBy1() {
+        memory=memory+1;
+    }
+
     /**
      * Enum representing the type of the GPU.
      */
@@ -91,7 +95,6 @@ public class GPU {
     public int getTime() {
         return time;
     }
-
     public void setBeginningTime(int beginningTime) {
         this.beginningTime = beginningTime;
     }
@@ -106,12 +109,23 @@ public class GPU {
     public void addData(DataBatch dataToTrain) {
         dataToTrainVector.add(dataToTrain);
     }
-    public DataBatch splitData(){
-        int tempIndexCurrentData=indexCurrentData;
-        indexCurrentData=indexCurrentData+1000;
-        DataBatch dataToProcess=new DataBatch(model.getData(),tempIndexCurrentData,this);
-        cluster.processData(dataToProcess);
-        return dataToProcess;
+    public DataBatch splitData() {
+        while (memory > 0 && indexCurrentData < model.getData().getSize()) {
+            int tempIndexCurrentData = indexCurrentData;
+            indexCurrentData = indexCurrentData + 1000;
+            DataBatch dataToProcess = new DataBatch(model.getData(), tempIndexCurrentData, this);
+            cluster.processData(dataToProcess);
+            memory = memory - 1;
+            return dataToProcess;
+        }
+        if(indexCurrentData == model.getData().getSize()){
+        return null;
+        }
+        return null;
+    }
+    public void updateCurrentDataToTrain(){
+        dataToTrainVector.remove(0);
+        gpuCurrentDataBatch=dataToTrainVector.get(0);
     }
     public void setModel(String result){
         model.setResults(result);
@@ -120,24 +134,3 @@ public class GPU {
         return model.getStudentDegree();
     }
 }
-//public void trainData(DataBatch dataToTrain,MicroService m) throws InterruptedException {
-//        int timeForTraining=timeToTrainEachData;
-//        while(timeForTraining>0){
-//            m.wait();
-//            timeForTraining--;
-//        }
-//    }
-//    public void trainDataLoop(MicroService m) throws InterruptedException {
-//        while (true) {
-//            DataBatch dataToTrain;
-//            try {
-//                dataToTrain = dataToTrainVector.remove(0);
-//            } catch (ArrayIndexOutOfBoundsException ignore) {
-//                dataToTrain = null;
-//            }
-//            while (dataToTrain == null) {
-//                m.wait();
-//            }
-//            trainData(dataToTrain,m);
-//        }
-//    }

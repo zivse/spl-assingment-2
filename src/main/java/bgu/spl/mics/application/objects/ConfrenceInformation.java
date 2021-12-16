@@ -52,4 +52,8 @@ public class ConfrenceInformation {
         confrenceString += "conferences: " + "\n" + "name: " + name + "\n" + "date" + date + "\n" + "publications" +  "\n"+ ConnectStudentToArticles.toString();
         return confrenceString;
     }
+
+    public String getName() {
+        return name;
+    }
 }

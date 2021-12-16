@@ -1,6 +1,7 @@
 package bgu.spl.mics;
 
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * The MicroService is an abstract class that any micro-service in the system
@@ -26,14 +27,16 @@ public abstract class MicroService implements Runnable {
     private final String name;
     private HashMap <Class<? extends Message>,Callback> connectCallToEventHashMap; //this way we can take the call function and use it in run after the subscribe happen.
     private MessageBusImpl bus;
+    private CountDownLatch countRunThreads;
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
-    public MicroService(String name) {
+    public MicroService(String name, CountDownLatch _countRunThreads) {
         this.name = name;
         connectCallToEventHashMap=new HashMap<Class<? extends Message>,Callback>();
         bus=bus.getInstance();
+        countRunThreads = _countRunThreads;
     }
 
     /**
@@ -154,6 +157,9 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
+        if(countRunThreads != null){
+            countRunThreads.countDown();
+        }
         bus.register(this);
         initialize();
         while(!terminated){

@@ -16,10 +16,12 @@ public class CPU {
     private Cluster cluster; //the compute
     int beginningTime;
     int time;
+    int countOfDataToProcess;
     boolean isActive;
     DataBatch currentDataBatch;
     int alreadyTrainedDataTime;
     public CPU(int _cores){
+        countOfDataToProcess=0;
         alreadyTrainedDataTime=0;
         cores=_cores;
         data= new Vector<>();
@@ -29,6 +31,28 @@ public class CPU {
         isActive=false;
         currentDataBatch=null;
     }
+
+    public int getCountOfDataToProcess() {
+        return countOfDataToProcess;
+    }
+
+    public void setCountOfDataToProcess(DataBatch dataToProcess) {
+        int countOfData=0;
+        Data.Type type = dataToProcess.getDataFromBath().getType();
+        switch (type) {
+            case Tabular: {
+                countOfData=(32/cores);
+            }
+            case Text: {
+                countOfData=(32/cores)*2;
+            }
+            case Images: {
+                countOfData=(32/cores)*4;
+            }
+        }
+        this.countOfDataToProcess =this.countOfDataToProcess+ countOfData;
+    }
+
     public int getAlreadyTrainedDataTime() {
         return alreadyTrainedDataTime;
     }

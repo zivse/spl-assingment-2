@@ -26,10 +26,9 @@ public class Cluster {
 	private static class cpuComp implements Comparator<CPU>{
 
 		public int compare(CPU cpu1, CPU cpu2) {
-
-			if (cpu1.getTime() > cpu2.getTime()) {
+			if (cpu1.getCountOfDataToProcess()-cpu1.getAlreadyTrainedDataTime() > cpu2.getCountOfDataToProcess()-cpu2.getAlreadyTrainedDataTime()) {
 				return 1;
-			} else if (cpu1.getTime() < cpu2.getTime()) {
+			} else if (cpu1.getCountOfDataToProcess()-cpu1.getAlreadyTrainedDataTime() < cpu2.getCountOfDataToProcess()-cpu2.getAlreadyTrainedDataTime()) {
 				return -1;
 			} else {
 				if (cpu1.getCores() > cpu2.getCores()) {
@@ -54,6 +53,7 @@ public void processData(DataBatch dataToProcess){ //need to pick available cpu a
 			processCpu.setCurrentDataBatch(dataToProcess);
 			processCpu.setBeginningTime(processCpu.getTime());
 		}
+	    processCpu.setCountOfDataToProcess(dataToProcess);
 		processCpu.addDataBatch(dataToProcess);
 		processCpu.setActive();
 }

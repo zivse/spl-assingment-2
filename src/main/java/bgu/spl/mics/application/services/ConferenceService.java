@@ -4,6 +4,8 @@ import bgu.spl.mics.*;
 import bgu.spl.mics.application.objects.ConfrenceInformation;
 import bgu.spl.mics.application.objects.Model;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * Conference service is in charge of
  * aggregating good results and publishing them via the {@link PublishConfrenceBroadcast},
@@ -15,8 +17,8 @@ import bgu.spl.mics.application.objects.Model;
  */
 public class ConferenceService extends MicroService {
     private ConfrenceInformation conference;
-    public ConferenceService(String _name,ConfrenceInformation _conference) {
-        super(_name);
+    public ConferenceService(String _name, ConfrenceInformation _conference, CountDownLatch countDown) {
+        super(_name,countDown);
         conference=_conference;
     }
     @Override
@@ -32,11 +34,8 @@ public class ConferenceService extends MicroService {
             Model model=event.getModel();
             conference.setConnectStudentToArticles(model.getStudent(),model);
         });
-        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
-            @Override
-            public void call(TerminateBroadcast c) {
+        subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();
-            }
         });
 
     }

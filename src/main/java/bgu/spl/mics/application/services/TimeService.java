@@ -7,6 +7,7 @@ import bgu.spl.mics.TickBroadcast;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * TimeService is the global system timer There is only one instance of this micro-service.
@@ -23,7 +24,7 @@ public class TimeService extends MicroService{
 	private int currentTime;
 
 	public TimeService(int _tickTime, int _duration) {
-		super("TimeService");
+		super("TimeService",null);
 		tickTime=_tickTime;
 		duration=_duration;
 		currentTime=1;
@@ -37,6 +38,7 @@ public class TimeService extends MicroService{
 				@Override
 				public void run() {
 					sendBroadcast(new TickBroadcast());
+
 				}
 			};
 			timer.schedule(task,tickTime);

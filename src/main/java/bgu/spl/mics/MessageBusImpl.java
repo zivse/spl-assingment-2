@@ -4,6 +4,7 @@ import bgu.spl.mics.application.objects.Cluster;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,9 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBusImpl implements MessageBus {
-	private HashMap<Class<? extends Message>, Vector<MicroService>> microServices;
-	private HashMap <Message, Future>  futures;
-	private HashMap<MicroService , BlockingDeque<Message>> messagesMap;
+	private ConcurrentHashMap<Class<? extends Message>, Vector<MicroService>> microServices;
+	private ConcurrentHashMap <Message, Future>  futures;
+	private ConcurrentHashMap<MicroService , BlockingDeque<Message>> messagesMap;
 	private AtomicInteger RRPTrainModelEventCounter;//round Robin Pattern Train Model Event Counter
 	private AtomicInteger RRPTestModelEventCounter;//round Robin Pattern Test Model Event Counter
 	private AtomicInteger RRPPublishResultsEventCounter;//round Robin Pattern Publish Results Event Counter
@@ -23,15 +24,15 @@ public class MessageBusImpl implements MessageBus {
 	private static Object lock=new Object();
 
 public MessageBusImpl(){
-	microServices=new HashMap<Class<? extends Message>,Vector<MicroService>>();
+	microServices=new ConcurrentHashMap<Class<? extends Message>,Vector<MicroService>>();
 	microServices.put(TrainModelEvent.class,new Vector<MicroService>());
 	microServices.put(TestModelEvent.class,new Vector<MicroService>());
 	microServices.put(PublishResultsEvent.class,new Vector<MicroService>());
 	microServices.put(PublishConferenceBroadcast.class,new Vector<MicroService>());
 	microServices.put(TickBroadcast.class,new Vector<MicroService>());
 	microServices.put(TerminateBroadcast.class,new Vector<MicroService>());
-	futures=new HashMap<Message, Future>();
-	messagesMap =new HashMap<MicroService , BlockingDeque<Message>>();
+	futures=new ConcurrentHashMap<Message, Future>();
+	messagesMap =new ConcurrentHashMap<MicroService , BlockingDeque<Message>>();
 	RRPTrainModelEventCounter=new AtomicInteger();
 	RRPTestModelEventCounter=new AtomicInteger();
 	RRPPublishResultsEventCounter=new AtomicInteger();
@@ -79,11 +80,14 @@ public static MessageBusImpl getInstance() {
 			synchronized(lock) {
 				String EventName = eClass.getName();
 				int numOfServices=microServices.get(eClass).size();
-				if (EventName.compareTo("TrainModelEvent") == 0) {
-					messagesMap.get(RRPTrainModelEventCounter.getAndIncrement()%numOfServices).add(e);
-				} else if (EventName.compareTo("TestModelEvent") == 0) {
+				if (EventName.compareTo("bgu.spl.mics.TrainModelEvent") == 0) {
+					MicroService tempMicroService=microServices.get(e.getClass()).get(RRPTrainModelEventCounter.getAndIncrement()%numOfServices);
+					messagesMap.get(tempMicroService).add(e);
+				} else if (EventName.compareTo("bgu.spl.mics.TestModelEvent") == 0) {
+					MicroService tempMicroService=microServices.get(e.getClass()).get(RRPTestModelEventCounter.getAndIncrement()%numOfServices);
 					messagesMap.get(RRPTestModelEventCounter.getAndIncrement()%numOfServices).add(e);
 				} else {
+					MicroService tempMicroService=microServices.get(e.getClass()).get(RRPPublishResultsEventCounter.getAndIncrement()%numOfServices);
 					messagesMap.get(RRPPublishResultsEventCounter.getAndIncrement()%numOfServices).add(e);
 				}
 				Future<T> future = new Future<T>();
@@ -106,8 +110,9 @@ public static MessageBusImpl getInstance() {
 	}
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		BlockingDeque<Message> tempMessagesVector = messagesMap.get(m);
-		// TODO check for null  nir
-			return tempMessagesVector.takeFirst();
+		BlockingDeque<Message> tempMessagesBlockingDeque = messagesMap.get(m);
+		try {
+			return tempMessagesBlockingDeque.take();
+		}catch(InterruptedException e){throw e;}
 	}
 }

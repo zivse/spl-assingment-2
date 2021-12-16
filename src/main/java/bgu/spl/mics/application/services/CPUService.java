@@ -9,6 +9,7 @@ import bgu.spl.mics.application.objects.Data;
 import bgu.spl.mics.application.objects.DataBatch;
 
 import java.util.LinkedList;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * This class may not hold references for objects which it is not responsible for.
@@ -18,56 +19,58 @@ import java.util.LinkedList;
  */
 public class CPUService extends MicroService {
     private CPU cpu;
-    public CPUService(String name, CPU _cpu) {
-        super(name);
+    public CPUService(String name, CPU _cpu, CountDownLatch countDown) {
+        super(name,countDown);
         cpu = _cpu;
     }
     @Override
     protected void initialize() {
-        Callback<TickBroadcast> callback = (TickBroadcast broadcast) ->{
+        subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) ->{
             cpu.updateTime();
             boolean isActive=cpu.getIsActive();
             int beginningTime=cpu.getBeginningTime();
             int time=cpu.getTime();
             DataBatch data=cpu.getCurrentDataBatch();
-            Data.Type type = data.getDataFromBath().getType();
-            int cores=cpu.getCores();
-            switch (type) {
-                case Tabular: {
-                if(isActive&&time-beginningTime==(32/cores)) {
-                    cpu.getCluster().trainData(data);
-                    cpu.updateCurrentDataToProcess();
-                     if(cpu.getCurrentDataBatch()!=null)  {
-                         cpu.setBeginningTime(time);
-                     }
-                }
-                }
-                case Text: {
-                    if(isActive&&time-beginningTime==(32/cores)*2) {
-                        cpu.getCluster().trainData(data);
-                        cpu.updateCurrentDataToProcess();
-                        if(cpu.getCurrentDataBatch()!=null)  {
-                            cpu.setBeginningTime(time);
+            if(cpu.getCurrentDataBatch()==null){
+                //TODO: implement complete
+            }
+            else {
+                Data.Type type = data.getDataFromBath().getType();
+                int cores = cpu.getCores();
+                switch (type) {
+                    case Tabular: {
+                        if (isActive && time - beginningTime == (32 / cores)) {
+                            cpu.getCluster().trainData(data);
+                            cpu.updateCurrentDataToProcess();
+                            if (cpu.getCurrentDataBatch() != null) {
+                                cpu.setBeginningTime(time);
+                            }
                         }
                     }
-                }
-                case Images: {
-                    if(isActive&&time-beginningTime==(32/cores)*4) {
-                        cpu.getCluster().trainData(data);
-                        cpu.updateCurrentDataToProcess();
-                        if(cpu.getCurrentDataBatch()!=null)  {
-                            cpu.setBeginningTime(time);
+                    case Text: {
+                        if (isActive && time - beginningTime == (32 / cores) * 2) {
+                            cpu.getCluster().trainData(data);
+                            cpu.updateCurrentDataToProcess();
+                            if (cpu.getCurrentDataBatch() != null) {
+                                cpu.setBeginningTime(time);
+                            }
+                        }
+                    }
+                    case Images: {
+                        if (isActive && time - beginningTime == (32 / cores) * 4) {
+                            cpu.getCluster().trainData(data);
+                            cpu.updateCurrentDataToProcess();
+                            if (cpu.getCurrentDataBatch() != null) {
+                                cpu.setBeginningTime(time);
+                            }
                         }
                     }
                 }
             }
-        } ;
-        subscribeBroadcast(TickBroadcast.class,callback );
-        subscribeBroadcast(TerminateBroadcast.class, new Callback<TerminateBroadcast>() {
-            @Override
-            public void call(TerminateBroadcast c) {
+        }) ;
+        subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast c)-> {
                 terminate();
-            }
+
         });
 
 }}
