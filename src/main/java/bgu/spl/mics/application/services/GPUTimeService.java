@@ -30,6 +30,7 @@ public class GPUTimeService extends MicroService {
         });
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
                 gpu.updateTime();
+                //System.out.println("gpu time service received a tick");
                 int timeToTrainEachData = gpu.getTimeToTrainEachData();
                 boolean isActive = gpu.getIsActiveTrain();
                 int beginningTime = gpu.getBeginningTime();
@@ -48,7 +49,6 @@ public class GPUTimeService extends MicroService {
                 }
                 if(gpu.getModel()!=null){
                     if(gpu.getIsFinishedTrained()){
-                        System.out.println("gpu time service ");
                         gpu.getModel().setStatus(Model.Status.Trained);
                     complete(gpu.getTrainModelEvent(),"trained");
                     }

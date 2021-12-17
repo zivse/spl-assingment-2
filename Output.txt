@@ -1,5 +1,4 @@
-[students :
-name: Simba
+[name: Simba
 department: Computer Science
 status: MSc
 publications0
@@ -9,7 +8,7 @@ name: YOLO10
 data: type: Tabular
 size: 200000
 
-status: PreTrained
+status: Training
 results: Nonename: ResNet9000
 data: type: Tabular
 size: 200000
@@ -25,8 +24,7 @@ data: type: Tabular
 size: 200000
 
 status: PreTrained
-results: None, students :
-name: Zazu
+results: None, name: Zazu
 department: EE
 status: PhD
 publications0
@@ -36,9 +34,8 @@ name: VIT
 data: type: Tabular
 size: 100000000
 
-status: PreTrained
-results: None, students :
-name: Pumba
+status: Training
+results: None, name: Pumba
 department: Computer Science
 status: PhD
 publications0
@@ -48,7 +45,7 @@ name: Bert
 data: type: Text
 size: 1000000
 
-status: PreTrained
+status: Training
 results: Nonename: GPT4
 data: type: Text
 size: 1000000
@@ -64,8 +61,7 @@ data: type: Text
 size: 50000
 
 status: PreTrained
-results: None, students :
-name: Timon
+results: None, name: Timon
 department: SE
 status: PhD
 publications0
@@ -75,7 +71,7 @@ name: Percepetron
 data: type: Tabular
 size: 1000000
 
-status: PreTrained
+status: Training
 results: Nonename: GNN
 data: type: Tabular
 size: 1000000
@@ -91,8 +87,7 @@ data: type: Images
 size: 500000
 
 status: PreTrained
-results: None, students :
-name: Nala
+results: None, name: Nala
 department: Computer Science
 status: PhD
 publications0
@@ -102,7 +97,7 @@ name: YOLO9000
 data: type: Tabular
 size: 100000
 
-status: PreTrained
+status: Training
 results: Nonename: VIT2
 data: type: Tabular
 size: 1000000

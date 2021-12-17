@@ -8,15 +8,14 @@ import java.util.Vector;
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
 public class GPU {
-    public void incrementMemoryBy1() {
-        memory=memory+1;
-    }
-
     /**
      * Enum representing the type of the GPU.
      */
     Event trainModelEvent;
     enum Type {RTX3090, RTX2080, GTX1080}
+    private Object lockIsFinished=new Object();
+    private Object lock=new Object();
+    private Object lock1=new Object();
     private Type type;
     private Model model;//the model the gpu is currently working on
     private Cluster cluster;
@@ -64,7 +63,10 @@ public class GPU {
         }
         time=1;
     }
-
+    public void incrementMemoryBy1() {
+        synchronized (lock1){
+        memory=memory+1;}
+    }
     public void setGpuCurrentDataBatch(DataBatch gpuCurrentDataBatch) {
         this.gpuCurrentDataBatch = gpuCurrentDataBatch;
     }
@@ -111,12 +113,13 @@ public class GPU {
         dataToTrainVector.add(dataToTrain);
     }
     public DataBatch splitData() {
+        synchronized(lock){
             int tempIndexCurrentData = indexCurrentData;
             indexCurrentData = indexCurrentData + 1000;
             DataBatch dataToProcess = new DataBatch(model.getData(), tempIndexCurrentData, this);
             cluster.processData(dataToProcess);
             memory = memory - 1;
-            return dataToProcess;
+            return dataToProcess;}
     }
     public void updateCurrentDataToTrain(){
         try {
@@ -130,9 +133,11 @@ public class GPU {
         return model.getStudentDegree();
     }
 public boolean getIsFinishedTrained(){
-        int size=model.getData().getSize();
-        int timePerDataTrain= timeToTrainEachData;
-        return ((size/1000)*timePerDataTrain==alreadyTrainedDataTime);
+        synchronized (lockIsFinished) {
+            int size = model.getData().getSize();
+            int timePerDataTrain = timeToTrainEachData;
+            return ((size) * timePerDataTrain == alreadyTrainedDataTime*1000);
+        }
 }
     public int getIndexCurrentData(){
         return indexCurrentData;

@@ -27,7 +27,7 @@ public class ConferenceService extends MicroService {
             conference.updateTime();
             if(conference.getTime()==conference.getDate()){
                 sendBroadcast(new PublishConferenceBroadcast(conference.getConnectStudentToArticles(),conference.getTotalPublishers()));
-                //terminate();
+               // terminate();
             }
         });
         subscribeEvent(PublishResultsEvent.class,(event)->{
@@ -35,7 +35,7 @@ public class ConferenceService extends MicroService {
             conference.setConnectStudentToArticles(model.getStudent(),model);
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
-                //terminate();
+                terminate();
         });
 
     }

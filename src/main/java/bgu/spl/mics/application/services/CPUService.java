@@ -35,7 +35,6 @@ public class CPUService extends MicroService {
             else {
                 Data.Type type = data.getDataFromBath().getType();
                 int cores = cpu.getCores();
-                System.out.println(cpu.getAlreadyTrainedDataTime());
                 switch (type) {
                     case Tabular: {
                         if (isActive && time - beginningTime == (32 / cores)) {
@@ -50,6 +49,7 @@ public class CPUService extends MicroService {
                     }
                     case Text: {
                         if (isActive && time - beginningTime == (32 / cores) * 2) {
+                           // System.out.println("cpu service enter condition");
                             cpu.updateAlreadyProcessedDataTime(time - beginningTime);
                             cpu.getCluster().trainData(data);
                             cpu.updateCurrentDataToProcess();
@@ -61,6 +61,7 @@ public class CPUService extends MicroService {
                     }
                     case Images: {
                         if (isActive && time - beginningTime == (32 / cores) * 4) {
+                           // System.out.println("cpu service enter condition");
                             cpu.updateAlreadyProcessedDataTime(time - beginningTime);
                             cpu.getCluster().trainData(data);
                             cpu.updateCurrentDataToProcess();

@@ -33,21 +33,23 @@ public class TimeService extends MicroService{
 	@Override
 	protected void initialize() {
 		Timer timer = new Timer();
-		if(currentTime < duration){
+
 		while (currentTime < duration){
+			//System.out.println(currentTime + " " + duration);
 			TimerTask task=new TimerTask() {
 				@Override
 				public void run() {
 					sendBroadcast(new TickBroadcast());
+					currentTime = currentTime + 1;
 				}
 			};
 			timer.schedule(task,tickTime);
-			currentTime += 1;
-		}}
-		else {
-			sendBroadcast(new TerminateBroadcast());
-			terminate();
+			//currentTime = currentTime +1;
 		}
+		timer.cancel();
+		sendBroadcast(new TerminateBroadcast());
+		terminate();
+
 	}
 
 

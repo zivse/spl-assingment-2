@@ -2,6 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.*;
 import bgu.spl.mics.application.objects.GPU;
+import bgu.spl.mics.application.objects.Model;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -52,6 +53,7 @@ private GPU gpu;
                     });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
               gpu.setModel(c.getModel());
+              gpu.getModel().setStatus(Model.Status.Training);
               gpu.setTrainModelEvent(c);
             while (gpu.getMemory() > 0 && gpu.getIndexCurrentData()<gpu.getModel().getData().getSize()){
                 gpu.splitData();

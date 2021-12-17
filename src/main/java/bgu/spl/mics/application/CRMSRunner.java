@@ -71,18 +71,21 @@ public class CRMSRunner {
             cluster.addGPU(gpu);
             gpuThread.start();
             gpuTimeThread.start();
+            //System.out.println("gpu thread id " + gpuThread.getId());
         }
         for(CPU cpu: cpuVector){
             CPUService cpuService=new CPUService("cpu",cpu, counterThreadToRun);
             Thread cpuThread=new Thread(cpuService);
             threadVector.add(cpuThread);
             cpuThread.start();
+            //System.out.println("cpu thread id " + cpuThread.getId());
         }
         for(ConfrenceInformation conf: confrenceInformationsVector){
             ConferenceService conferenceService=new ConferenceService(conf.getName(),conf,counterThreadToRun);
             Thread conferenceThread=new Thread(conferenceService);
             threadVector.add(conferenceThread);
             conferenceThread.start();
+            //System.out.println("conf thread ids " + conferenceThread.getId());
         }
 
         try{
@@ -118,6 +121,7 @@ public class CRMSRunner {
             Thread studentServiceThread = new Thread(studentService);
             threadVector.add(studentServiceThread);
             studentServiceThread.start();
+            //System.out.println("student thread " + studentServiceThread.getId());
         }
         try{
             studentCountDown.await();
@@ -126,6 +130,7 @@ public class CRMSRunner {
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);
         Thread timeThread=new Thread(timeService);
+        //System.out.println("time thread id" + timeThread.getId());
         timeThread.start();
         threadVector.add(timeThread);
         for( Thread currentThread:threadVector){

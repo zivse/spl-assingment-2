@@ -14,14 +14,15 @@ public class CPU {
     private Cluster cluster; //the compute
     private int beginningTime;
     private int time;
-    private int countOfDataToProcess;
+    private int alreadyProccesedDataTime;
+    private int timeToProcessCurrentData;
     private boolean isActive;
     private DataBatch currentDataBatch;
-    private int alreadyTrainedDataTime;
-    Object lock;
+
+    private Object lock = new Object();
     public CPU(int _cores){
-        countOfDataToProcess=0;
-        alreadyTrainedDataTime=0;
+        timeToProcessCurrentData =0;
+        alreadyProccesedDataTime =0;
         cores=_cores;
         data= new Vector<>();
         cluster=cluster.getInstance();
@@ -30,12 +31,35 @@ public class CPU {
         isActive=false;
         currentDataBatch=null;
     }
-
-    public int getCountOfDataToProcess() {
-        return countOfDataToProcess;
+    //functions already processed data time
+    public int getAlreadyProcessedDataTime() {
+        return alreadyProccesedDataTime;
     }
-
-    public void setCountOfDataToProcess(DataBatch dataToProcess) {
+    public void updateAlreadyProcessedDataTime(int incrementTime) {
+        synchronized (lock) {
+            alreadyProccesedDataTime = alreadyProccesedDataTime + incrementTime;
+        }
+    }
+    //fuctions beginnng time
+    public int getBeginningTime() {
+        return beginningTime;
+    }
+    public void setBeginningTime(int beginningTime) {
+        isActive=true;
+        this.beginningTime = beginningTime;
+    }
+    //functions time
+    public int getTime() {
+        return time;
+    }
+    public void updateTime() {
+        time=time+1;
+    }
+    //functions CountOfDataToProcess
+    public int getTimeToProcessCurrentData() {
+        return timeToProcessCurrentData;
+    }
+    public void setTimeToProcessCurrentData(DataBatch dataToProcess) {
         int countOfData=0;
         Data.Type type = dataToProcess.getDataFromBath().getType();
         switch (type) {
@@ -49,22 +73,20 @@ public class CPU {
                 countOfData=(32/cores)*4;
             }
         }
-        this.countOfDataToProcess =this.countOfDataToProcess+ countOfData;
+        this.timeToProcessCurrentData =this.timeToProcessCurrentData + countOfData;
     }
 
-    public int getAlreadyTrainedDataTime() {
-        return alreadyTrainedDataTime;
-    }
+
+
+
+
+
     public Cluster getCluster() {//why? there is only one cluster...
         return cluster;
     }
 
     public DataBatch getCurrentDataBatch() {
         return currentDataBatch;
-    }
-
-    public int getBeginningTime() {
-        return beginningTime;
     }
 
     public boolean getIsActive() {
@@ -74,23 +96,9 @@ public class CPU {
         return cores;
     }
 
-    public int getTime() {
-        return time;
-    }
-
     public void setActive() {
         isActive=true;
     }
-
-    public void setBeginningTime(int beginningTime) {
-        isActive=true;
-        this.beginningTime = beginningTime;
-    }
-
-    public void updateTime() {
-        time=time+1;
-    }
-
     public void setCurrentDataBatch(DataBatch currentDataBatch) {
         this.currentDataBatch = currentDataBatch;
     }
@@ -102,12 +110,6 @@ public class CPU {
         currentDataBatch= data.remove(0);}
         else{
             currentDataBatch=null;
-        }
-    }
-
-    public void updateAlreadyProcessedDataTime(int incrementTime) {
-        synchronized (this) {
-            alreadyTrainedDataTime = alreadyTrainedDataTime + incrementTime;
         }
     }
 }

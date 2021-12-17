@@ -106,7 +106,9 @@ public static MessageBusImpl getInstance() {
 		synchronized(lock) {
 			BlockingDeque<Message>tempMessageDeque=messagesMap.remove(m);
 			for (Message currentM :tempMessageDeque) {
-				messagesMap.get(currentM.getClass()).remove(m);
+				try {
+					messagesMap.get(currentM.getClass()).remove(m);
+				}catch(NullPointerException e){}
 			}
 		}
 	}
