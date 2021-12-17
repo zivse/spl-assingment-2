@@ -157,11 +157,12 @@ public abstract class MicroService implements Runnable {
      */
     @Override
     public final void run() {
+        bus.register(this);
+        initialize();
         if(countRunThreads != null){
             countRunThreads.countDown();
         }
-        bus.register(this);
-        initialize();
+        System.out.println("micro service run "+countRunThreads.getCount());
         while(!terminated){
             try {
                Message event= bus.awaitMessage(this);

@@ -18,13 +18,18 @@ import java.util.concurrent.CountDownLatch;
  */
 public class StudentService extends MicroService {
     private Student student;
+    Model currentModel;
+    int indexModel;
     public StudentService(Student student, CountDownLatch countDown) {
         super("StudentService",countDown);
         this.student=student;
+        indexModel=0;
+        currentModel=null;
     }
 
     @Override
     protected void initialize() {
+        currentModel=student.getModelVector().get(0);
         subscribeBroadcast(PublishConferenceBroadcast.class,(PublishConferenceBroadcast event)->{
         if(event.getConnectStudentToArticles().get(student)==null){
             student.setPapersRead(event.getTotalPublishers());
@@ -40,14 +45,28 @@ public class StudentService extends MicroService {
                 terminate();
         });
         Vector<Model> tempModelsVector=student.getModelVector();
-
-             for(Model currentModel:tempModelsVector){
+            for(Model currentModel:tempModelsVector){
             if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
                 if(sendEvent(new TestModelEvent()).get()=="Good"){
                     sendEvent(new PublishResultsEvent(currentModel));
                 };
             }
         }
+        subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
+            if(indexModel<student.getModelVector().size()) {
+                if (currentModel.getStatus() == Model.Status.PreTrained) {
+                    sendEvent(new TrainModelEvent(currentModel));
+                    currentModel.setStatus(Model.Status.Training);
+                } else if (currentModel.getStatus() == Model.Status.Trained) {
+                    if (sendEvent(new TestModelEvent()).get() == "Good") {
+                        sendEvent(new PublishResultsEvent(currentModel));
+                    }
+                    currentModel.setStatus(Model.Status.Tested);
+                    indexModel = indexModel + 1;
+                    currentModel = student.getModelVector().get(indexModel);
+                }
+            }
+        });
 
-    }
-}
+    }}
+

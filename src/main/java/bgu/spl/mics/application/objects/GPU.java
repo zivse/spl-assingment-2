@@ -1,4 +1,5 @@
 package bgu.spl.mics.application.objects;
+import bgu.spl.mics.Event;
 import bgu.spl.mics.Message;
 import bgu.spl.mics.MicroService;
 import java.net.Proxy;
@@ -16,6 +17,7 @@ public class GPU {
     /**
      * Enum representing the type of the GPU.
      */
+    Event trainModelEvent;
     enum Type {RTX3090, RTX2080, GTX1080}
     private Type type;
     private Model model;//the model the gpu is currently working on
@@ -31,6 +33,7 @@ public class GPU {
     private boolean activeTrain;
     private DataBatch gpuCurrentDataBatch;
     public GPU(String _type){
+        trainModelEvent=null;
         gpuCurrentDataBatch=null;
         activeTrain=false;
         currentDataToTrain=null;
@@ -118,9 +121,6 @@ public class GPU {
             memory = memory - 1;
             return dataToProcess;
         }
-        if(indexCurrentData == model.getData().getSize()){
-        return null;
-        }
         return null;
     }
     public void updateCurrentDataToTrain(){
@@ -132,5 +132,25 @@ public class GPU {
     }
     public String getStudentFromGPU(){
         return model.getStudentDegree();
+    }
+public boolean getIsFinishedTrained(){
+        int size=model.getData().getSize();;
+        int timePerDataTrain= timeToTrainEachData;
+        return ((size/1000)*timePerDataTrain==alreadyTrainedDataTime);
+}
+    public int getMemory() {
+        return memory;
+    }
+
+    public void setTrainModelEvent(Event trainModelEvent) {
+        this.trainModelEvent = trainModelEvent;
+    }
+
+    public Event getTrainModelEvent() {
+        return trainModelEvent;
+    }
+
+    public int getAlreadyTrainedDataTime() {
+        return alreadyTrainedDataTime;
     }
 }

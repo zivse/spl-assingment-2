@@ -66,7 +66,7 @@ public class CRMSRunner {
             Thread gpuThread = new Thread(gpuService);
             threadVector.add(gpuThread);
             GPUTimeService gpuTimeService = new GPUTimeService("gpuTime",gpu, counterThreadToRun);
-            Thread gpuTimeThread = new Thread(gpuService);
+            Thread gpuTimeThread = new Thread(gpuTimeService);
             threadVector.add(gpuTimeThread);
             cluster.addGPU(gpu);
             gpuThread.start();
@@ -120,9 +120,11 @@ public class CRMSRunner {
             studentServiceThread.start();
         }
         try{
+            while (studentCountDown.getCount()!=0){
+            System.out.println("main before await student countdown"+studentCountDown.getCount());}
             studentCountDown.await();
         }catch(InterruptedException ignored){}
-
+        System.out.println("main before time service");
         int tickTime = object.get("TickTime").getAsInt();
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);

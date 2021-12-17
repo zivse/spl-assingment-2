@@ -26,6 +26,7 @@ public class CPUService extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) ->{
+            System.out.println("cpuservice initialize");
             cpu.updateTime();
             boolean isActive=cpu.getIsActive();
             int beginningTime=cpu.getBeginningTime();

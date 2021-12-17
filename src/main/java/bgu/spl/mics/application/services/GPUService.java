@@ -54,6 +54,7 @@ private GPU gpu;
                     });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
               gpu.setModel(c.getModel());
+              gpu.setTrainModelEvent( c);
               gpu.splitData();
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
