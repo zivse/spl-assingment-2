@@ -1,7 +1,5 @@
 package bgu.spl.mics.application.objects;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -14,12 +12,13 @@ public class CPU {
     private int cores; //number of cores
     private Vector<DataBatch> data; //the data the cpu currently procssing
     private Cluster cluster; //the compute
-    int beginningTime;
-    int time;
-    int countOfDataToProcess;
-    boolean isActive;
-    DataBatch currentDataBatch;
-    int alreadyTrainedDataTime;
+    private int beginningTime;
+    private int time;
+    private int countOfDataToProcess;
+    private boolean isActive;
+    private DataBatch currentDataBatch;
+    private int alreadyTrainedDataTime;
+    Object lock;
     public CPU(int _cores){
         countOfDataToProcess=0;
         alreadyTrainedDataTime=0;
@@ -89,7 +88,7 @@ public class CPU {
     }
 
     public void updateTime() {
-        time=time++;
+        time=time+1;
     }
 
     public void setCurrentDataBatch(DataBatch currentDataBatch) {
@@ -99,47 +98,16 @@ public class CPU {
         data.add(dataToProcess) ;
     }
     public void updateCurrentDataToProcess(){
-        data.remove(0);
-        currentDataBatch=data.get(0);
+        if(!data.isEmpty()){
+        currentDataBatch= data.remove(0);}
+        else{
+            currentDataBatch=null;
+        }
+    }
+
+    public void updateAlreadyProcessedDataTime(int incrementTime) {
+        synchronized (this) {
+            alreadyTrainedDataTime = alreadyTrainedDataTime + incrementTime;
+        }
     }
 }
-
-
-
-//    public Boolean proccessData(DataBatch dataBatch){
-//        Data.Type type = dataBatch.getDataFromBath().getType();
-//        switch (type){
-//            case Tabular:{
-//                for(int i=0; i< 1*(32/cores); i++){
-//                    try{
-//                        this.wait();
-//                    }
-//                    catch (InterruptedException ignored){
-//                    }
-//                }
-//                break;
-//            }
-//            case Text: {
-//                for (int i = 0; i < 2 * (32 / cores); i++) {
-//                    try {
-//                        this.wait();
-//                    } catch (InterruptedException ignored) {
-//                    }
-//                }
-//                break;
-//
-//            }
-//            case Images:{
-//                for(int i=0; i< 4*(32/cores); i++){
-//                    try{
-//                        this.wait();
-//                    }
-//                    catch (InterruptedException ignored){
-//                    }
-//                }
-//                break;
-//            }
-//        }
-//        cluster.trainData(dataBatch);
-//        return true;
-//    }

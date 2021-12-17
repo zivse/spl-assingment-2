@@ -55,6 +55,7 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
+		System.out.println("complete in message bus"+e);
 	  e.getFuture().resolve(result);
 	}
 
@@ -102,9 +103,11 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public void unregister(MicroService m) {
-		messagesMap.remove(m);
-		for(Vector<MicroService> current:microServices.values()){
-			current.remove(m);
+		synchronized(lock) {
+			BlockingDeque<Message>tempMessageDeque=messagesMap.remove(m);
+			for (Message currentM :tempMessageDeque) {
+				messagesMap.get(currentM.getClass()).remove(m);
+			}
 		}
 	}
 	@Override

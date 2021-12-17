@@ -120,11 +120,8 @@ public class CRMSRunner {
             studentServiceThread.start();
         }
         try{
-            while (studentCountDown.getCount()!=0){
-            System.out.println("main before await student countdown"+studentCountDown.getCount());}
             studentCountDown.await();
         }catch(InterruptedException ignored){}
-        System.out.println("main before time service");
         int tickTime = object.get("TickTime").getAsInt();
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);

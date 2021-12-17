@@ -48,6 +48,7 @@ public class Cluster {
 	}
 public void processData(DataBatch dataToProcess){ //need to pick available cpu and tell him to process
 		CPU processCpu = cpuPriority.poll(); //need to choose smart TODO:implement this
+		cpuPriority.add(processCpu);
 		DataBatch cpuCurrentDataBatch=processCpu.getCurrentDataBatch();
 		if(cpuCurrentDataBatch==null){
 			processCpu.setCurrentDataBatch(dataToProcess);

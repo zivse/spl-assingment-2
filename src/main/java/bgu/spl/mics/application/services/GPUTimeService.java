@@ -7,6 +7,7 @@ import bgu.spl.mics.TickBroadcast;
 import bgu.spl.mics.application.objects.Data;
 import bgu.spl.mics.application.objects.DataBatch;
 import bgu.spl.mics.application.objects.GPU;
+import bgu.spl.mics.application.objects.Model;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -28,7 +29,6 @@ public class GPUTimeService extends MicroService {
                 terminate();
         });
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
-            System.out.println("gpu time service"+gpu.getAlreadyTrainedDataTime());
                 gpu.updateTime();
                 int timeToTrainEachData = gpu.getTimeToTrainEachData();
                 boolean isActive = gpu.getIsActiveTrain();
@@ -46,8 +46,12 @@ public class GPUTimeService extends MicroService {
                         gpu.updateAlreadyTrainedData();
                     }
                 }
-                if(gpu.getIsFinishedTrained()){
-                    complete(gpu.getTrainModelEvent(),"Trained");
+                if(gpu.getModel()!=null){
+                    if(gpu.getIsFinishedTrained()){
+                        System.out.println("gpu time service ");
+                        gpu.getModel().setStatus(Model.Status.Trained);
+                    complete(gpu.getTrainModelEvent(),"trained");
+                    }
                 }
         });
     }

@@ -162,11 +162,11 @@ public abstract class MicroService implements Runnable {
         if(countRunThreads != null){
             countRunThreads.countDown();
         }
-        System.out.println("micro service run "+countRunThreads.getCount());
         while(!terminated){
             try {
                Message event= bus.awaitMessage(this);
                 Callback function= connectCallToEventHashMap.get(event.getClass());
+                //System.out.println("micro service run "+event.toString());
                 function.call(event);
             }
             catch (InterruptedException e) {

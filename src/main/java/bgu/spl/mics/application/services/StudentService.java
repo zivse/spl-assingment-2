@@ -41,23 +41,13 @@ public class StudentService extends MicroService {
             student.setPapersRead(event.getTotalPublishers()-modelsSize);
         }
         });
-        subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
-                terminate();
-        });
-        Vector<Model> tempModelsVector=student.getModelVector();
-            for(Model currentModel:tempModelsVector){
-            if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
-                if(sendEvent(new TestModelEvent()).get()=="Good"){
-                    sendEvent(new PublishResultsEvent(currentModel));
-                };
-            }
-        }
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
             if(indexModel<student.getModelVector().size()) {
                 if (currentModel.getStatus() == Model.Status.PreTrained) {
                     sendEvent(new TrainModelEvent(currentModel));
                     currentModel.setStatus(Model.Status.Training);
                 } else if (currentModel.getStatus() == Model.Status.Trained) {
+                    System.out.println("student service");
                     if (sendEvent(new TestModelEvent()).get() == "Good") {
                         sendEvent(new PublishResultsEvent(currentModel));
                     }
@@ -67,6 +57,15 @@ public class StudentService extends MicroService {
                 }
             }
         });
-
+        subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
+            terminate();
+        });
     }}
 
+//            for(Model currentModel:tempModelsVector){
+//            if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
+//                if(sendEvent(new TestModelEvent()).get()=="Good"){
+//                    sendEvent(new PublishResultsEvent(currentModel));
+//                };
+//            }
+//        }

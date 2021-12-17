@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.TerminateBroadcast;
 import bgu.spl.mics.TickBroadcast;
@@ -8,7 +7,6 @@ import bgu.spl.mics.application.objects.CPU;
 import bgu.spl.mics.application.objects.Data;
 import bgu.spl.mics.application.objects.DataBatch;
 
-import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -26,7 +24,6 @@ public class CPUService extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) ->{
-            System.out.println("cpuservice initialize");
             cpu.updateTime();
             boolean isActive=cpu.getIsActive();
             int beginningTime=cpu.getBeginningTime();
@@ -38,33 +35,40 @@ public class CPUService extends MicroService {
             else {
                 Data.Type type = data.getDataFromBath().getType();
                 int cores = cpu.getCores();
+                System.out.println(cpu.getAlreadyTrainedDataTime());
                 switch (type) {
                     case Tabular: {
                         if (isActive && time - beginningTime == (32 / cores)) {
+                            cpu.updateAlreadyProcessedDataTime(time - beginningTime);
                             cpu.getCluster().trainData(data);
                             cpu.updateCurrentDataToProcess();
                             if (cpu.getCurrentDataBatch() != null) {
                                 cpu.setBeginningTime(time);
                             }
                         }
+                       break;
                     }
                     case Text: {
                         if (isActive && time - beginningTime == (32 / cores) * 2) {
+                            cpu.updateAlreadyProcessedDataTime(time - beginningTime);
                             cpu.getCluster().trainData(data);
                             cpu.updateCurrentDataToProcess();
                             if (cpu.getCurrentDataBatch() != null) {
                                 cpu.setBeginningTime(time);
                             }
                         }
+                        break;
                     }
                     case Images: {
                         if (isActive && time - beginningTime == (32 / cores) * 4) {
+                            cpu.updateAlreadyProcessedDataTime(time - beginningTime);
                             cpu.getCluster().trainData(data);
                             cpu.updateCurrentDataToProcess();
                             if (cpu.getCurrentDataBatch() != null) {
                                 cpu.setBeginningTime(time);
                             }
                         }
+                        break;
                     }
                 }
             }

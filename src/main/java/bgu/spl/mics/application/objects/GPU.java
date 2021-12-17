@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.objects;
 import bgu.spl.mics.Event;
-import bgu.spl.mics.Message;
-import bgu.spl.mics.MicroService;
-import java.net.Proxy;
+
 import java.util.Vector;
 /**
  * Passive object representing a single GPU.
@@ -113,31 +111,32 @@ public class GPU {
         dataToTrainVector.add(dataToTrain);
     }
     public DataBatch splitData() {
-        while (memory > 0 && indexCurrentData < model.getData().getSize()) {
             int tempIndexCurrentData = indexCurrentData;
             indexCurrentData = indexCurrentData + 1000;
             DataBatch dataToProcess = new DataBatch(model.getData(), tempIndexCurrentData, this);
             cluster.processData(dataToProcess);
             memory = memory - 1;
             return dataToProcess;
-        }
-        return null;
     }
     public void updateCurrentDataToTrain(){
-        dataToTrainVector.remove(0);
-        gpuCurrentDataBatch=dataToTrainVector.get(0);
+        try {
+            gpuCurrentDataBatch = dataToTrainVector.remove(0);
+        }catch(ArrayIndexOutOfBoundsException e){gpuCurrentDataBatch =null; };
     }
     public void setModel(String result){
         model.setResults(result);
     }
-    public String getStudentFromGPU(){
+    public String getStudentDegreeFromGPU(){
         return model.getStudentDegree();
     }
 public boolean getIsFinishedTrained(){
-        int size=model.getData().getSize();;
+        int size=model.getData().getSize();
         int timePerDataTrain= timeToTrainEachData;
         return ((size/1000)*timePerDataTrain==alreadyTrainedDataTime);
 }
+    public int getIndexCurrentData(){
+        return indexCurrentData;
+    }
     public int getMemory() {
         return memory;
     }
@@ -152,5 +151,8 @@ public boolean getIsFinishedTrained(){
 
     public int getAlreadyTrainedDataTime() {
         return alreadyTrainedDataTime;
+    }
+    public Model getModel(){
+        return model;
     }
 }

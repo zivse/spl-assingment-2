@@ -3,8 +3,6 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.*;
 import bgu.spl.mics.application.objects.GPU;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -27,7 +25,7 @@ private GPU gpu;
         subscribeEvent(TestModelEvent.class, (TestModelEvent testModelEvent)-> {
                         int range = 10+1;
                         int prob= (int)(Math.random()*range);
-                        String typeStudent=gpu.getStudentFromGPU();
+                        String typeStudent=gpu.getStudentDegreeFromGPU();
                         String result="";
                         if(typeStudent.compareTo("MSc")==0){
                             if(prob<=6){
@@ -54,8 +52,11 @@ private GPU gpu;
                     });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
               gpu.setModel(c.getModel());
-              gpu.setTrainModelEvent( c);
-              gpu.splitData();
+              gpu.setTrainModelEvent(c);
+            while (gpu.getMemory() > 0 && gpu.getIndexCurrentData()<gpu.getModel().getData().getSize()){
+                gpu.splitData();
+            }
+
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();
