@@ -2,6 +2,8 @@ package bgu.spl.mics.application.objects;
 import bgu.spl.mics.Event;
 
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Passive object representing a single GPU.
  * Add all the fields described in the assignment as private fields.
@@ -13,25 +15,21 @@ public class GPU {
      */
     Event trainModelEvent;
     enum Type {RTX3090, RTX2080, GTX1080}
-    private Object lockIsFinished=new Object();
-    private Object lock=new Object();
-    private Object lock1=new Object();
     private Type type;
     private Model model;//the model the gpu is currently working on
     private Cluster cluster;
     private int alreadyTrainedDataTime;
     private int indexCurrentData;
-    private int memory;
+    private AtomicInteger memory;
     private Vector<DataBatch> dataToTrainVector;
     private DataBatch currentDataToTrain;
     private int timeToTrainEachData;
     private int time;
     int beginningTime;
     private boolean activeTrain;
-    private DataBatch gpuCurrentDataBatch;
+    //constructor
     public GPU(String _type){
         trainModelEvent=null;
-        gpuCurrentDataBatch=null;
         activeTrain=false;
         currentDataToTrain=null;
         beginningTime=1;
@@ -50,114 +48,125 @@ public class GPU {
             type = Type.GTX1080;
         }
         if(_type.compareTo("RTX3090")==0){
-            memory=32;
+            memory=new AtomicInteger(32);
             timeToTrainEachData=1;
         }
         else if(_type.compareTo("RTX2080")==0){
-            memory=16;
+            memory=new AtomicInteger(16);
             timeToTrainEachData=2;
         }
         else{
-            memory=8;
+            memory=new AtomicInteger(8);
             timeToTrainEachData=4;
         }
         time=1;
     }
-    public void incrementMemoryBy1() {
-        synchronized (lock1){
-        memory=memory+1;}
+   //fuctions current data to train
+   public DataBatch getCurrentDataToTrain() {
+       return currentDataToTrain;
+   }
+    public void updateCurrentDataToTrain(){
+        try {
+            currentDataToTrain = dataToTrainVector.remove(0);
+        }catch(ArrayIndexOutOfBoundsException e){
+            currentDataToTrain =null; };
     }
-    public void setGpuCurrentDataBatch(DataBatch gpuCurrentDataBatch) {
-        this.gpuCurrentDataBatch = gpuCurrentDataBatch;
+    public void addDataToTrainToVector(DataBatch dataToTrain) { //if gpu busy add data to vector
+        dataToTrainVector.add(dataToTrain);
     }
-
-    public DataBatch getCurrentDataToTrain() {
-        return currentDataToTrain;
+    public void setCurrentDataToTrain(DataBatch current){
+        currentDataToTrain=current;
     }
-
+    //already trained data
+    public int getAlreadyTrainedDataTime() {
+        return alreadyTrainedDataTime;
+    }
     public void updateAlreadyTrainedData() {
-        this.alreadyTrainedDataTime = alreadyTrainedDataTime+timeToTrainEachData;
+        this.alreadyTrainedDataTime = alreadyTrainedDataTime+1000;
     }
-
-    public boolean getIsActiveTrain() {
-        return activeTrain;
-    }
-
-    public void setActiveTrain(boolean activeTrain) {
-        this.activeTrain = activeTrain;
-    }
-
+    //beginning time functions
     public int getBeginningTime() {
         return beginningTime;
     }
-
+    public void setBeginningTime() {
+        this.beginningTime = time;
+    }
+    //active train function
+    public boolean getIsActiveTrain() {
+        return activeTrain;
+    }
+    public void setActiveTrain(boolean activeTrain) {
+        this.activeTrain = activeTrain;
+    }
+    //fuctions time to train each data culculate already in constructor
     public int getTimeToTrainEachData() {
         return timeToTrainEachData;
     }
-
+    //functions time
     public int getTime() {
         return time;
     }
-    public void setBeginningTime(int beginningTime) {
-        this.beginningTime = beginningTime;
-    }
-
     public void updateTime(){
         time=time+1;
     }
-    public void setModel(Model currentModel){ //set the model of the gpu to new model to work on.
-        model=currentModel;
-        indexCurrentData=0;
-    }
-    public void addData(DataBatch dataToTrain) {
-        dataToTrainVector.add(dataToTrain);
-    }
-    public DataBatch splitData() {
-        synchronized(lock){
-            int tempIndexCurrentData = indexCurrentData;
-            indexCurrentData = indexCurrentData + 1000;
-            DataBatch dataToProcess = new DataBatch(model.getData(), tempIndexCurrentData, this);
-            cluster.processData(dataToProcess);
-            memory = memory - 1;
-            return dataToProcess;}
-    }
-    public void updateCurrentDataToTrain(){
-        try {
-            gpuCurrentDataBatch = dataToTrainVector.remove(0);
-        }catch(ArrayIndexOutOfBoundsException e){gpuCurrentDataBatch =null; };
-    }
-    public void setModel(String result){
-        model.setResults(result);
-    }
-    public String getStudentDegreeFromGPU(){
-        return model.getStudentDegree();
-    }
-public boolean getIsFinishedTrained(){
-        synchronized (lockIsFinished) {
-            int size = model.getData().getSize();
-            int timePerDataTrain = timeToTrainEachData;
-            return ((size) * timePerDataTrain == alreadyTrainedDataTime*1000);
-        }
-}
+    //index current data metods
     public int getIndexCurrentData(){
         return indexCurrentData;
     }
+    public void updateIndexCurrentData() {
+        indexCurrentData = indexCurrentData+1000;
+    }
+//functions model
+public Model getModel(){
+    return model;
+}
+public int getModelDataSize(){
+        return this.model.getData().getSize();
+}
+public void setModelAndInitializeIndexCurrentData(Model currentModel){ //set the model of the gpu to new model to work on.
+    model=currentModel;
+    indexCurrentData=0;
+}
+    public void setModelResults(String result){
+        model.setResults(result);
+    }
+    public void setModelStatus(Model.Status status){
+        model.setStatus(status);
+    }
+//functions memory
     public int getMemory() {
-        return memory;
+    return memory.intValue();
+}
+    public void incrementMemoryBy1() {
+        memory.incrementAndGet();
     }
-
-    public void setTrainModelEvent(Event trainModelEvent) {
-        this.trainModelEvent = trainModelEvent;
+    public void decreaseMemoryBy1(){
+        memory.decrementAndGet();
     }
+//functions model event
+public void setTrainModelEvent(Event trainModelEvent) {
+    this.trainModelEvent = trainModelEvent;
+}
 
     public Event getTrainModelEvent() {
         return trainModelEvent;
     }
 
-    public int getAlreadyTrainedDataTime() {
-        return alreadyTrainedDataTime;
+
+    //split data function
+    public void splitData() {
+        int tempIndexCurrentData = indexCurrentData;
+        updateIndexCurrentData();
+        DataBatch dataToProcess = new DataBatch(model.getData(), tempIndexCurrentData, this);
+        decreaseMemoryBy1();
+        cluster.processData(dataToProcess);
     }
-    public Model getModel(){
-        return model;
+//student function
+    public String getStudentDegreeFromGPU(){
+        return model.getStudentDegree();
     }
+//is finish trained
+public boolean getIsFinishedTrained(){
+        return (alreadyTrainedDataTime == getModelDataSize());
+}
 }

@@ -23,54 +23,25 @@ public class CPUService extends MicroService {
     }
     @Override
     protected void initialize() {
-        subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) ->{
+        subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) -> {
             cpu.updateTime();
-            boolean isActive=cpu.getIsActive();
-            int beginningTime=cpu.getBeginningTime();
-            int time=cpu.getTime();
-            DataBatch data=cpu.getCurrentDataBatch();
-            if(cpu.getCurrentDataBatch()==null){
-                //TODO: implement complete
-            }
-            else {
-                Data.Type type = data.getDataFromBath().getType();
+            DataBatch data = cpu.getCurrentDataBatch();
+            if (cpu.getCurrentDataBatch() != null) {
+                boolean isActive = cpu.getIsActive();
+                int beginningTime = cpu.getBeginningTime();
+                int time = cpu.getTime();
                 int cores = cpu.getCores();
-                switch (type) {
-                    case Tabular: {
-                        if (isActive && time - beginningTime == (32 / cores)) {
-                            cpu.updateAlreadyProcessedDataTime(time - beginningTime);
-                            cpu.getCluster().trainData(data);
-                            cpu.updateCurrentDataToProcess();
-                            if (cpu.getCurrentDataBatch() != null) {
-                                cpu.setBeginningTime(time);
-                            }
-                        }
-                       break;
+                int timeToProcessCurrentData=cpu.getTimeToProcessCurrentData();
+                if (isActive && time - beginningTime ==cpu.getTimeToProcessCurrentData() ) {
+                    cpu.decrementTotalProcessDataAmount();
+                    cpu.updateCurrentDataToProcess();
+                    cpu.updateAlreadyProcessedDataTime(timeToProcessCurrentData);
+                    if(cpu.getCurrentDataBatch()!=null){
+                        cpu.setTimeToProcessCurrentData(cpu.getCurrentDataBatch());
+                        cpu.setBeginningTime();
+                        cpu.incrementTotalProcessDataAmount();
                     }
-                    case Text: {
-                        if (isActive && time - beginningTime == (32 / cores) * 2) {
-                           // System.out.println("cpu service enter condition");
-                            cpu.updateAlreadyProcessedDataTime(time - beginningTime);
-                            cpu.getCluster().trainData(data);
-                            cpu.updateCurrentDataToProcess();
-                            if (cpu.getCurrentDataBatch() != null) {
-                                cpu.setBeginningTime(time);
-                            }
-                        }
-                        break;
-                    }
-                    case Images: {
-                        if (isActive && time - beginningTime == (32 / cores) * 4) {
-                           // System.out.println("cpu service enter condition");
-                            cpu.updateAlreadyProcessedDataTime(time - beginningTime);
-                            cpu.getCluster().trainData(data);
-                            cpu.updateCurrentDataToProcess();
-                            if (cpu.getCurrentDataBatch() != null) {
-                                cpu.setBeginningTime(time);
-                            }
-                        }
-                        break;
-                    }
+                    cpu.getCluster().trainData(data);
                 }
             }
         }) ;

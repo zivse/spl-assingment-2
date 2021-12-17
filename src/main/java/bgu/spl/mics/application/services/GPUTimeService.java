@@ -30,7 +30,7 @@ public class GPUTimeService extends MicroService {
         });
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
                 gpu.updateTime();
-                //System.out.println("gpu time service received a tick");
+                if(gpu.getModel()!=null){
                 int timeToTrainEachData = gpu.getTimeToTrainEachData();
                 boolean isActive = gpu.getIsActiveTrain();
                 int beginningTime = gpu.getBeginningTime();
@@ -38,22 +38,18 @@ public class GPUTimeService extends MicroService {
                 DataBatch data = gpu.getCurrentDataToTrain();
                 if (isActive && time - beginningTime == timeToTrainEachData) {
                     gpu.incrementMemoryBy1();
-                    if(gpu.getMemory()>0){
-                        gpu.splitData();
-                    }
+                    gpu.updateAlreadyTrainedData();
                     gpu.updateCurrentDataToTrain();
                     if (gpu.getCurrentDataToTrain() != null) {
-                        gpu.setBeginningTime(time);
-                        gpu.updateAlreadyTrainedData();
+                        gpu.setBeginningTime();
                     }
                 }
-                if(gpu.getModel()!=null){
                     if(gpu.getIsFinishedTrained()){
+                        System.out.println("gpu time service ");
                         gpu.getModel().setStatus(Model.Status.Trained);
                     complete(gpu.getTrainModelEvent(),"trained");
                     }
-                }
-        });
+        }});
     }
 
 }

@@ -156,6 +156,9 @@ public class CRMSRunner {
                 }
             }
         }
+        for (GPU gpu : gpuVector) {
+            System.out.println(gpu.getAlreadyTrainedDataTime());
+        }
 
 
     }

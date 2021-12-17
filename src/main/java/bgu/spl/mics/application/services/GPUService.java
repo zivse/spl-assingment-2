@@ -5,6 +5,7 @@ import bgu.spl.mics.application.objects.GPU;
 import bgu.spl.mics.application.objects.Model;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * GPU service is responsible for handling the
@@ -31,34 +32,33 @@ private GPU gpu;
                         if(typeStudent.compareTo("MSc")==0){
                             if(prob<=6){
                                 result="Good";
-                                gpu.setModel("Good");
+                                gpu.setModelResults("Good");
                             }
                             else{
                                 result="Bad";
-                                gpu.setModel("Bad");
+                                gpu.setModelResults("Bad");
                             }
                         }
                         else{
                             if(prob<=8){
                                 result= "Good";
-                                gpu.setModel("Good");
+                                gpu.setModelResults("Good");
                             }
                             else{
                                 result="Bad";
-                                gpu.setModel("Bad");
+                                gpu.setModelResults("Bad");
                             }
                         }
                         complete(testModelEvent,result);
 
                     });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
-              gpu.setModel(c.getModel());
-              gpu.getModel().setStatus(Model.Status.Training);
+              gpu.setModelAndInitializeIndexCurrentData(c.getModel());
+              gpu.setModelStatus(Model.Status.Training);
               gpu.setTrainModelEvent(c);
-            while (gpu.getMemory() > 0 && gpu.getIndexCurrentData()<gpu.getModel().getData().getSize()){
+            while (gpu.getMemory() > 0 && gpu.getIndexCurrentData()<gpu.getModelDataSize()){
                 gpu.splitData();
             }
-
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();

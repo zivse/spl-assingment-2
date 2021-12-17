@@ -18,9 +18,11 @@ public class CPU {
     private int timeToProcessCurrentData;
     private boolean isActive;
     private DataBatch currentDataBatch;
+    private int totalProcessDataAmount;
 
     private Object lock = new Object();
     public CPU(int _cores){
+        totalProcessDataAmount=0;
         timeToProcessCurrentData =0;
         alreadyProccesedDataTime =0;
         cores=_cores;
@@ -44,9 +46,9 @@ public class CPU {
     public int getBeginningTime() {
         return beginningTime;
     }
-    public void setBeginningTime(int beginningTime) {
+    public void setBeginningTime() {
         isActive=true;
-        this.beginningTime = beginningTime;
+        beginningTime = time;
     }
     //functions time
     public int getTime() {
@@ -60,56 +62,68 @@ public class CPU {
         return timeToProcessCurrentData;
     }
     public void setTimeToProcessCurrentData(DataBatch dataToProcess) {
-        int countOfData=0;
         Data.Type type = dataToProcess.getDataFromBath().getType();
         switch (type) {
             case Tabular: {
-                countOfData=(32/cores);
+                timeToProcessCurrentData=(32/cores);
+                break;
             }
             case Text: {
-                countOfData=(32/cores)*2;
+                timeToProcessCurrentData=(32/cores)*2;
+                break;
             }
             case Images: {
-                countOfData=(32/cores)*4;
+                timeToProcessCurrentData=(32/cores)*4;
+                break;
             }
         }
-        this.timeToProcessCurrentData =this.timeToProcessCurrentData + countOfData;
+    }
+//functions isActive
+    public boolean getIsActive() {
+    return isActive;
+}
+    public void setActive() {
+        isActive=true;
     }
 
-
-
-
-
-
+    //functions cluster
     public Cluster getCluster() {//why? there is only one cluster...
         return cluster;
     }
 
+   //functions cores
+   public int getCores(){
+       return cores;
+   }
+
+   //add data batch to the vector data to process case cpu busy
+    public void addDataBatch(DataBatch dataToProcess){
+        data.add(dataToProcess) ;
+    }
+
+    //functions current data batch
     public DataBatch getCurrentDataBatch() {
         return currentDataBatch;
-    }
-
-    public boolean getIsActive() {
-        return isActive;
-    }
-    public int getCores(){
-        return cores;
-    }
-
-    public void setActive() {
-        isActive=true;
     }
     public void setCurrentDataBatch(DataBatch currentDataBatch) {
         this.currentDataBatch = currentDataBatch;
     }
-    public void addDataBatch(DataBatch dataToProcess){
-        data.add(dataToProcess) ;
-    }
+    //updateCurrentDataToProcess update the current data from the vector to the next value
     public void updateCurrentDataToProcess(){
         if(!data.isEmpty()){
-        currentDataBatch= data.remove(0);}
+            currentDataBatch= data.remove(0);}
         else{
             currentDataBatch=null;
         }
+    }
+//total process data amount functions
+    public int getTotalProcessDataAmount() {
+        return totalProcessDataAmount;
+    }
+    public void incrementTotalProcessDataAmount() {
+        totalProcessDataAmount = totalProcessDataAmount+ timeToProcessCurrentData;
+    }
+    public void decrementTotalProcessDataAmount(){
+        totalProcessDataAmount = totalProcessDataAmount-timeToProcessCurrentData;
     }
 }

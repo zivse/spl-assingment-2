@@ -45,12 +45,16 @@ public static MessageBusImpl getInstance() {
 	}
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-	microServices.get(type).add(m);
+		synchronized(lock) {
+			microServices.get(type).add(m);
+		}
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-	microServices.get(type).add(m);
+		synchronized(lock) {
+			microServices.get(type).add(m);
+		}
 	}
 
 	@Override
@@ -71,13 +75,13 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
+		synchronized(lock) {
 		Class eClass=e.getClass();
 		Vector<MicroService>relatedServices=microServices.get(eClass);
 		if(relatedServices==null){
 			return null;
 		}
 		else{
-			synchronized(lock) {
 				String EventName = eClass.getName();
 				int numOfServices=microServices.get(eClass).size();
 				if (EventName.compareTo("bgu.spl.mics.TrainModelEvent") == 0) {
