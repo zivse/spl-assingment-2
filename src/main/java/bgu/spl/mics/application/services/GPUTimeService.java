@@ -45,7 +45,6 @@ public class GPUTimeService extends MicroService {
                     }
                 }
                     if(gpu.getIsFinishedTrained()){
-                        System.out.println("gpu time service ");
                         gpu.getModel().setStatus(Model.Status.Trained);
                     complete(gpu.getTrainModelEvent(),"trained");
                     }

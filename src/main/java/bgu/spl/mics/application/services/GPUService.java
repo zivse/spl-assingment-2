@@ -49,7 +49,8 @@ private GPU gpu;
                                 gpu.setModelResults("Bad");
                             }
                         }
-                        complete(testModelEvent,result);
+                        gpu.getModel().setStatus(Model.Status.Tested);
+                       // complete(testModelEvent,result);
 
                     });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {

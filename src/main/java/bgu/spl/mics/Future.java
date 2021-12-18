@@ -55,7 +55,6 @@ public class Future<T> {
      */
 	public void resolve (T result) {
 		fResult = result;
-		notifyAll();
 	}
 	
 	/**

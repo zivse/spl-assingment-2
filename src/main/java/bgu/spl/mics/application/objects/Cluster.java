@@ -75,7 +75,7 @@ public void trainData(DataBatch dataToTrain) {
 		}
 		gpuToTrain.setActiveTrain(true);
 		if(gpuToTrain.getIndexCurrentData()<gpuToTrain.getModelDataSize()){
-			gpuToTrain.splitData();
+		//	gpuToTrain.splitData();
 		}
 		}
 	}

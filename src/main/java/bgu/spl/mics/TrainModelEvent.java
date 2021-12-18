@@ -14,4 +14,8 @@ public class TrainModelEvent implements Event{
     public Model getModel(){
         return modelToTrain;
     }
+
+    public void setFuture(Future future) {
+        this.future = future;
+    }
 }

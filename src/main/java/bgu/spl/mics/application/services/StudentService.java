@@ -44,17 +44,22 @@ public class StudentService extends MicroService {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
             if(indexModel<student.getModelVector().size()) {
                 if (currentModel.getStatus() == Model.Status.PreTrained) {
-                    sendEvent(new TrainModelEvent(currentModel));
+                    TrainModelEvent eTrain=new TrainModelEvent(currentModel);
+                    eTrain.setFuture(sendEvent(eTrain));
                     currentModel.setStatus(Model.Status.Training);
                 } else if (currentModel.getStatus() == Model.Status.Trained) {
-                    if (sendEvent(new TestModelEvent()).get() == "Good") {
-                        sendEvent(new PublishResultsEvent(currentModel));
+                    TestModelEvent eTest=new TestModelEvent();
+                    eTest.setFuture(sendEvent(eTest));}
+                    else if(currentModel.getStatus() == Model.Status.Tested){
+                        if (currentModel.getResults().compareTo("Good")==0) {
+                            PublishResultsEvent ePublish = new PublishResultsEvent(currentModel);
+                            ePublish.setFuture(sendEvent(ePublish));
+                        }
+                        indexModel = indexModel + 1;
+                        if(indexModel<student.getModelVector().size()){
+                        currentModel = student.getModelVector().get(indexModel);}
                     }
-                    currentModel.setStatus(Model.Status.Tested);
-                    indexModel = indexModel + 1;
-                    currentModel = student.getModelVector().get(indexModel);
                 }
-            }
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
             terminate();

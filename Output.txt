@@ -8,7 +8,7 @@ name: YOLO10
 data: type: Tabular
 size: 200000
 
-status: Trained
+status: Training
 results: Nonename: ResNet9000
 data: type: Tabular
 size: 200000

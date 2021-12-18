@@ -27,9 +27,11 @@ public class Model {
 
 
     }
-    public Results getResults(){
-        return results;
-
+    public String getResults(){
+        if(results==Results.Good){
+        return "Good";
+        }
+            return "Bad";
     }
     public String getStudentDegree(){
         return student.getDegree();

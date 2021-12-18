@@ -14,4 +14,8 @@ public class PublishResultsEvent implements Event {
     public Model getModel(){
         return model;
     }
+
+    public void setFuture(Future future) {
+        this.future = future;
+    }
 }

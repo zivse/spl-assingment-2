@@ -59,8 +59,8 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-		System.out.println("complete in message bus"+e);
-	  e.getFuture().resolve(result);
+//		System.out.println("complete in message bus"+e);
+			e.getFuture().resolve(result);
 	}
 
 	@Override
@@ -89,10 +89,10 @@ public static MessageBusImpl getInstance() {
 					messagesMap.get(tempMicroService).add(e);
 				} else if (EventName.compareTo("bgu.spl.mics.TestModelEvent") == 0) {
 					MicroService tempMicroService=microServices.get(e.getClass()).get(RRPTestModelEventCounter.getAndIncrement()%numOfServices);
-					messagesMap.get(RRPTestModelEventCounter.getAndIncrement()%numOfServices).add(e);
+					messagesMap.get(tempMicroService).add(e);
 				} else {
 					MicroService tempMicroService=microServices.get(e.getClass()).get(RRPPublishResultsEventCounter.getAndIncrement()%numOfServices);
-					messagesMap.get(RRPPublishResultsEventCounter.getAndIncrement()%numOfServices).add(e);
+					messagesMap.get(tempMicroService).add(e);
 				}
 				Future<T> future = new Future<T>();
 				return future;
