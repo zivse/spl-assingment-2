@@ -31,19 +31,23 @@ public class GPUTimeService extends MicroService {
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
                 gpu.updateTime();
                 if(gpu.getModel()!=null){
+                    //initialization
                 int timeToTrainEachData = gpu.getTimeToTrainEachData();
                 boolean isActive = gpu.getIsActiveTrain();
                 int beginningTime = gpu.getBeginningTime();
                 int time = gpu.getTime();
                 DataBatch data = gpu.getCurrentDataToTrain();
+                //actions
                 if (isActive && time - beginningTime == timeToTrainEachData) {
-                    gpu.incrementMemoryBy1();
                     gpu.updateAlreadyTrainedData();
                     gpu.updateCurrentDataToTrain();
                     if (gpu.getCurrentDataToTrain() != null) {
                         gpu.setBeginningTime();
                     }
                 }
+                    for(int i=0;i<6&&gpu.getDataToTrainVectorSize()<gpu.getMemory()&&!gpu.splitedDataLinkedListIsEmpty();i++){
+                        gpu.getCluster().processData(gpu.takeDataToTrainFromsplitedDataLinkedList()) ;
+                    }
                     if(gpu.getIsFinishedTrained()){
                         gpu.getModel().setStatus(Model.Status.Trained);
                     complete(gpu.getTrainModelEvent(),"trained");

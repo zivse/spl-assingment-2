@@ -57,9 +57,7 @@ private GPU gpu;
               gpu.setModelAndInitializeIndexCurrentData(c.getModel());
               gpu.setModelStatus(Model.Status.Training);
               gpu.setTrainModelEvent(c);
-            while (gpu.getMemory() > 0 && gpu.getIndexCurrentData()<gpu.getModelDataSize()){
                 gpu.splitData();
-            }
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();
