@@ -148,6 +148,7 @@ public class CRMSRunner {
             fileWriter.write(confrenceInformationsVector.toString());
             fileWriter.write("total cpu " + totalCpu);
             fileWriter.write("total gpu " + totalGpu);
+            fileWriter.write("total batches " + cluster.getBatches());
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

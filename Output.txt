@@ -55,12 +55,12 @@ results: Nonename: GPT5
 data: type: Text
 size: 200000
 
-status: Tested
+status: PreTrained
 results: Nonename: GPT10
 data: type: Text
 size: 50000
 
-status: Tested
+status: PreTrained
 results: None, name: Timon
 department: SE
 status: PhD
@@ -71,17 +71,17 @@ name: Percepetron
 data: type: Tabular
 size: 1000000
 
-status: Tested
+status: Training
 results: Nonename: GNN
 data: type: Tabular
 size: 1000000
 
-status: Tested
+status: PreTrained
 results: Nonename: MoreStyleGAN
 data: type: Images
 size: 100000
 
-status: Tested
+status: PreTrained
 results: Nonename: ConditionalGAN
 data: type: Images
 size: 500000
@@ -97,7 +97,7 @@ name: YOLO9000
 data: type: Tabular
 size: 100000
 
-status: PreTrained
+status: Tested
 results: Nonename: VIT2
 data: type: Tabular
 size: 1000000
@@ -133,4 +133,4 @@ publications
 name: AISTATS
 date5000
 publications
-{}]total cpu 6663total gpu 7506
+{}]total cpu 57449total gpu 59601total batches 57445

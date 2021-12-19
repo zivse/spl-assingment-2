@@ -57,16 +57,13 @@ public class StudentService extends MicroService {
                 }
                 else if(currentModel.getStatus() == Model.Status.Tested && currentEvent == 2){
                     currentEvent = 0;
-                    System.out.println("student service 2");
                     indexModel = indexModel + 1;
                     if (currentModel.getResults() == Model.Results.Good) {
                         PublishResultsEvent ePublish = new PublishResultsEvent(currentModel);
                         ePublish.setFuture(sendEvent(ePublish));
                     }
-                    System.out.println("model name" + currentModel.getName());
                     if(indexModel<student.getModelVector().size()){
                     currentModel = student.getModelVector().get(indexModel);
-                        System.out.println("model name 2 " + currentModel.getName());
                      }
                 }
             }

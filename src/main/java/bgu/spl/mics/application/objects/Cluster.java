@@ -1,9 +1,9 @@
 package bgu.spl.mics.application.objects;
 
-
 import java.util.Comparator;
 import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive object representing the cluster.
@@ -18,13 +18,16 @@ public class Cluster {
 	private static Cluster instance = new Cluster();
 	private Vector<GPU> gpusVector;
 	private PriorityBlockingQueue<CPU> cpuPriority;
+	private AtomicInteger batches = new AtomicInteger(0);
 	private Cluster(){
 		gpusVector=new Vector<GPU>();
 	}
+
 	public void addCPU(Vector<CPU> cpuVector){
-		cpuPriority = new PriorityBlockingQueue(cpuVector.size(),new cpuComp());
+		 cpuPriority = new PriorityBlockingQueue(cpuVector.size(),new cpuComp());
 		cpuPriority.addAll(cpuVector);
 	}
+
 	private static class cpuComp implements Comparator<CPU>{
 
 		public int compare(CPU cpu1, CPU cpu2) {
@@ -50,7 +53,7 @@ public class Cluster {
 
 	public void processData(DataBatch dataToProcess) { //need to pick available cpu and tell him to process
 		synchronized (cLock) {
-			CPU processCpu = cpuPriority.poll(); //need to choose smart
+			CPU processCpu = cpuPriority.poll();
 			cpuPriority.add(processCpu);
 			processCpu.addDataBatch(dataToProcess);
 		}
@@ -58,8 +61,12 @@ public class Cluster {
 
 	public void sendDataToGpu(DataBatch dataBatch){
 		synchronized (gLock) {
+			batches.addAndGet(1);
 			dataBatch.getGPU().addDataBatchToTrain(dataBatch);
 		}
+	}
+	public int getBatches(){
+		return batches.get();
 	}
 
 		/**
