@@ -3,7 +3,6 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.*;
 import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
-
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
@@ -18,13 +17,15 @@ import java.util.concurrent.CountDownLatch;
  */
 public class StudentService extends MicroService {
     private Student student;
-    Model currentModel;
-    int indexModel;
+    private Model currentModel;
+    private int indexModel;
+    private int currentEvent;
     public StudentService(Student student, CountDownLatch countDown) {
         super("StudentService",countDown);
         this.student=student;
         indexModel=0;
         currentModel=null;
+        currentEvent = 0;
     }
 
     @Override
@@ -43,33 +44,34 @@ public class StudentService extends MicroService {
         });
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
             if(indexModel<student.getModelVector().size()) {
-                if (currentModel.getStatus() == Model.Status.PreTrained) {
+                if (currentModel.getStatus() == Model.Status.PreTrained && currentEvent == 0) {
                     TrainModelEvent eTrain=new TrainModelEvent(currentModel);
                     eTrain.setFuture(sendEvent(eTrain));
-                    currentModel.setStatus(Model.Status.Training);
-                } else if (currentModel.getStatus() == Model.Status.Trained) {
-                    TestModelEvent eTest=new TestModelEvent();
-                    eTest.setFuture(sendEvent(eTest));}
-                    else if(currentModel.getStatus() == Model.Status.Tested){
-                        if (currentModel.getResults().compareTo("Good")==0) {
-                            PublishResultsEvent ePublish = new PublishResultsEvent(currentModel);
-                            ePublish.setFuture(sendEvent(ePublish));
-                        }
-                        indexModel = indexModel + 1;
-                        if(indexModel<student.getModelVector().size()){
-                        currentModel = student.getModelVector().get(indexModel);}
-                    }
+                    currentEvent += 1;
                 }
+                else if (currentModel.getStatus() == Model.Status.Trained&& currentEvent ==1) {
+                    currentModel.setStatus(Model.Status.Tested);
+                    TestModelEvent eTest=new TestModelEvent(currentModel);
+                    eTest.setFuture(sendEvent(eTest));
+                    currentEvent += 1;
+                }
+                else if(currentModel.getStatus() == Model.Status.Tested && currentEvent == 2){
+                    currentEvent = 0;
+                    System.out.println("student service 2");
+                    indexModel = indexModel + 1;
+                    if (currentModel.getResults() == Model.Results.Good) {
+                        PublishResultsEvent ePublish = new PublishResultsEvent(currentModel);
+                        ePublish.setFuture(sendEvent(ePublish));
+                    }
+                    System.out.println("model name" + currentModel.getName());
+                    if(indexModel<student.getModelVector().size()){
+                    currentModel = student.getModelVector().get(indexModel);
+                        System.out.println("model name 2 " + currentModel.getName());
+                     }
+                }
+            }
         });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
             terminate();
         });
     }}
-
-//            for(Model currentModel:tempModelsVector){
-//            if(sendEvent(new TrainModelEvent(currentModel)).get()!=null){
-//                if(sendEvent(new TestModelEvent()).get()=="Good"){
-//                    sendEvent(new PublishResultsEvent(currentModel));
-//                };
-//            }
-//        }

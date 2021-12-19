@@ -65,12 +65,8 @@ public class CRMSRunner {
             GPUService gpuService = new GPUService("gpu", gpu,counterThreadToRun );
             Thread gpuThread = new Thread(gpuService);
             threadVector.add(gpuThread);
-            GPUTimeService gpuTimeService = new GPUTimeService("gpuTime",gpu, counterThreadToRun);
-            Thread gpuTimeThread = new Thread(gpuTimeService);
-            threadVector.add(gpuTimeThread);
             cluster.addGPU(gpu);
             gpuThread.start();
-            gpuTimeThread.start();
             //System.out.println("gpu thread id " + gpuThread.getId());
         }
         for(CPU cpu: cpuVector){
@@ -130,22 +126,32 @@ public class CRMSRunner {
         int duration = object.get("Duration").getAsInt();
         TimeService timeService = new TimeService(tickTime, duration);
         Thread timeThread=new Thread(timeService);
-        //System.out.println("time thread id" + timeThread.getId());
         timeThread.start();
         threadVector.add(timeThread);
         for( Thread currentThread:threadVector){
             try{
-            currentThread.join();}catch(InterruptedException ignored){}
+            currentThread.join();}
+            catch(InterruptedException ignored){}
+        }
+        int totalCpu = 0;
+        for(CPU cpu : cpuVector){
+            totalCpu = totalCpu + cpu.getTotalCpuTime();
+        }
+        int totalGpu = 0;
+        for(GPU gpu: gpuVector){
+            totalGpu = totalGpu + gpu.getTotalGPUTime();
         }
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter("Output.txt");
             fileWriter.write(studentsVector.toString());
             fileWriter.write(confrenceInformationsVector.toString());
-            //add all the information
+            fileWriter.write("total cpu " + totalCpu);
+            fileWriter.write("total gpu " + totalGpu);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+
         finally {
             if(fileWriter != null){
                 try{
@@ -156,11 +162,10 @@ public class CRMSRunner {
                 }
             }
         }
-        for (GPU gpu : gpuVector) {
-            System.out.println(gpu.getAlreadyTrainedDataTime());
-        }
-
-
+//        for (Student student : studentsVector) {
+//            for (Model model: student.getModelVector())
+//                System.out.println(model.getName() + " " + model.getData().getProcessed() + " processed from " + model.getData().getSize());
+//        }
     }
     }
 

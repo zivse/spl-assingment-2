@@ -12,57 +12,25 @@ public class CPU {
     private int cores; //number of cores
     private Vector<DataBatch> data; //the data the cpu currently procssing
     private Cluster cluster; //the compute
-    private int beginningTime;
-    private int time;
-    private int alreadyProccesedDataTime;
-    private int timeToProcessCurrentData;
-    private boolean isActive;
+    private int tickCounter;
+    private int totalCpuTime;
     private DataBatch currentDataBatch;
-    private int totalProcessDataAmount;
+    private int timeToCompleteData;
 
     private Object lock = new Object();
     public CPU(int _cores){
-        totalProcessDataAmount=0;
-        timeToProcessCurrentData =0;
-        alreadyProccesedDataTime =0;
         cores=_cores;
         data= new Vector<>();
         cluster=cluster.getInstance();
-        beginningTime=1;
-        time=1;
-        isActive=false;
+        tickCounter = 0;
+        totalCpuTime = 0;
         currentDataBatch=null;
+        timeToCompleteData = 0;
     }
-    //functions already processed data time
-    public int getAlreadyProcessedDataTime() {
-        return alreadyProccesedDataTime;
-    }
-    public void updateAlreadyProcessedDataTime(int incrementTime) {
-        synchronized (lock) {
-            alreadyProccesedDataTime = alreadyProccesedDataTime + incrementTime;
-        }
-    }
-    //fuctions beginnng time
-    public int getBeginningTime() {
-        return beginningTime;
-    }
-    public void setBeginningTime() {
-        isActive=true;
-        beginningTime = time;
-    }
-    //functions time
-    public int getTime() {
-        return time;
-    }
-    public void updateTime() {
-        time=time+1;
-    }
-    //functions CountOfDataToProcess
-    public int getTimeToProcessCurrentData() {
-        return timeToProcessCurrentData;
-    }
-    public void setTimeToProcessCurrentData(DataBatch dataToProcess) {
+
+    public int timeToProcessCurrentData(DataBatch dataToProcess) {
         Data.Type type = dataToProcess.getDataFromBath().getType();
+        int timeToProcessCurrentData =0;
         switch (type) {
             case Tabular: {
                 timeToProcessCurrentData=(32/cores);
@@ -77,18 +45,28 @@ public class CPU {
                 break;
             }
         }
+        return timeToProcessCurrentData;
     }
-//functions isActive
-    public boolean getIsActive() {
-    return isActive;
-}
-    public void setActive() {
-        isActive=true;
-    }
-
-    //functions cluster
-    public Cluster getCluster() {//why? there is only one cluster...
-        return cluster;
+    public void processData(){
+        if(currentDataBatch != null){
+            totalCpuTime += 1;
+            tickCounter +=1;
+            if(tickCounter >= timeToProcessCurrentData(currentDataBatch)){
+                cluster.sendDataToGpu(currentDataBatch);
+                timeToCompleteData -= timeToProcessCurrentData(currentDataBatch);
+                if(!data.isEmpty()){
+                    currentDataBatch = data.remove(0);
+                }
+                else{
+                    currentDataBatch = null;
+                }
+            }
+        }
+        else{
+            if(!data.isEmpty()){
+                currentDataBatch = data.remove(0);
+            }
+        }
     }
 
    //functions cores
@@ -98,7 +76,8 @@ public class CPU {
 
    //add data batch to the vector data to process case cpu busy
     public void addDataBatch(DataBatch dataToProcess){
-        data.add(dataToProcess) ;
+        data.add(dataToProcess);
+        timeToCompleteData += timeToProcessCurrentData(dataToProcess);
     }
 
     //functions current data batch
@@ -116,14 +95,13 @@ public class CPU {
             currentDataBatch=null;
         }
     }
-//total process data amount functions
-    public int getTotalProcessDataAmount() {
-        return totalProcessDataAmount;
+    public int getTimeToCompleteData(){
+        return timeToCompleteData;
     }
-    public void incrementTotalProcessDataAmount() {
-        totalProcessDataAmount = totalProcessDataAmount+ timeToProcessCurrentData;
+    public int getTotalCpuTime(){
+        return totalCpuTime;
     }
-    public void decrementTotalProcessDataAmount(){
-        totalProcessDataAmount = totalProcessDataAmount-timeToProcessCurrentData;
-    }
+
+
+
 }

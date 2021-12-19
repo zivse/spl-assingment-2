@@ -24,26 +24,7 @@ public class CPUService extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) -> {
-            cpu.updateTime();
-            DataBatch data = cpu.getCurrentDataBatch();
-            if (cpu.getCurrentDataBatch() != null) {
-                boolean isActive = cpu.getIsActive();
-                int beginningTime = cpu.getBeginningTime();
-                int time = cpu.getTime();
-                int cores = cpu.getCores();
-                int timeToProcessCurrentData=cpu.getTimeToProcessCurrentData();
-                if (isActive && time - beginningTime ==cpu.getTimeToProcessCurrentData() ) {
-                    cpu.decrementTotalProcessDataAmount();
-                    cpu.updateCurrentDataToProcess();
-                    cpu.updateAlreadyProcessedDataTime(timeToProcessCurrentData);
-                    if(cpu.getCurrentDataBatch()!=null){
-                        cpu.setTimeToProcessCurrentData(cpu.getCurrentDataBatch());
-                        cpu.setBeginningTime();
-                        cpu.incrementTotalProcessDataAmount();
-                    }
-                    cpu.getCluster().trainData(data);
-                }
-            }
+            cpu.processData();
         }) ;
         subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast c)-> {
                 terminate();

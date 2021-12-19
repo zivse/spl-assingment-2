@@ -15,6 +15,7 @@ public class Data {
     private Type type;
     private int processed;
     private int size;
+    private int index;
 
     public Data(String _type, int _size){ //fix all gpu related
         if(_type.compareTo("Text")==0){
@@ -28,6 +29,7 @@ public class Data {
         }
         processed = 0;
         size = _size;
+        index = 0;
 
     }
     public Type getType(){
@@ -42,5 +44,17 @@ public class Data {
 
     public int getSize() {
         return size;
+    }
+
+    public void  setProcessed(){
+        processed += 1000;
+    }
+    public int getProcessed(){
+        return processed;
+    }
+    public synchronized DataBatch split(GPU gpu){
+        DataBatch dataBatch = new DataBatch(this, index, gpu);
+        index += 1000;
+        return dataBatch;
     }
 }

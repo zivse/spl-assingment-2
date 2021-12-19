@@ -55,11 +55,8 @@ public class Student {
     public void setModelsVector(Vector<Model> _modelsVector) {
         modelsVector = _modelsVector;
     }
-    public String getDegree(){
-        if(status==Degree.MSc){
-            return "MSc";
-        }
-        return "PhD";
+    public Degree getDegree(){
+       return status;
     }
     public Vector<Model> getModelVector(){
         return modelsVector;

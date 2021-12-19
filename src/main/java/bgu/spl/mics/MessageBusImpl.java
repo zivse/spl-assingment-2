@@ -20,8 +20,10 @@ public class MessageBusImpl implements MessageBus {
 	private AtomicInteger RRPTrainModelEventCounter;//round Robin Pattern Train Model Event Counter
 	private AtomicInteger RRPTestModelEventCounter;//round Robin Pattern Test Model Event Counter
 	private AtomicInteger RRPPublishResultsEventCounter;//round Robin Pattern Publish Results Event Counter
-	private static MessageBusImpl instance = null;
-	private static Object lock=new Object();
+	private static MessageBusImpl instance = new MessageBusImpl();
+	private static Object lock1 = new Object();
+	private static Object lock2 = new Object();
+	private static Object lock3 = new Object();
 
 public MessageBusImpl(){
 	microServices=new ConcurrentHashMap<Class<? extends Message>,Vector<MicroService>>();
@@ -38,21 +40,18 @@ public MessageBusImpl(){
 	RRPPublishResultsEventCounter=new AtomicInteger();
 }
 public static MessageBusImpl getInstance() {
-		if(instance == null){
-			instance = new MessageBusImpl();
-		}
 		return instance;
 	}
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		synchronized(lock) {
+		synchronized(lock1) {
 			microServices.get(type).add(m);
 		}
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		synchronized(lock) {
+		synchronized(lock2) {
 			microServices.get(type).add(m);
 		}
 	}
@@ -60,22 +59,26 @@ public static MessageBusImpl getInstance() {
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 //		System.out.println("complete in message bus"+e);
+		synchronized(futures) {
 			e.getFuture().resolve(result);
+		}
 	}
 
 	@Override
 	public void sendBroadcast(Broadcast b){
-		Class bClass=b.getClass();
-		Vector<MicroService>relatedServices=microServices.get(bClass);
-		for(MicroService current:relatedServices){
+		synchronized (lock1) {
+			Class bClass = b.getClass();
+			Vector<MicroService> relatedServices = microServices.get(bClass);
+			for (MicroService current : relatedServices) {
 				messagesMap.get(current).add(b);
-				}
+			}
+		}
 	}
 
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		synchronized(lock) {
+		synchronized(lock3) {
 		Class eClass=e.getClass();
 		Vector<MicroService>relatedServices=microServices.get(eClass);
 		if(relatedServices==null){
@@ -107,7 +110,7 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public void unregister(MicroService m) {
-		synchronized(lock) {
+		synchronized(lock2) {
 			BlockingDeque<Message>tempMessageDeque=messagesMap.remove(m);
 			for (Message currentM :tempMessageDeque) {
 				try {

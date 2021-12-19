@@ -16,7 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class GPUService extends MicroService {
+
 private GPU gpu;
+
     public GPUService(String name, GPU _gpu, CountDownLatch countDown) {
         super(name,countDown);
         gpu=_gpu;
@@ -25,42 +27,17 @@ private GPU gpu;
     @Override
     protected void initialize() {
         subscribeEvent(TestModelEvent.class, (TestModelEvent testModelEvent)-> {
-                        int range = 10+1;
-                        int prob= (int)(Math.random()*range);
-                        String typeStudent=gpu.getStudentDegreeFromGPU();
-                        String result="";
-                        if(typeStudent.compareTo("MSc")==0){
-                            if(prob<=6){
-                                result="Good";
-                                gpu.setModelResults("Good");
-                            }
-                            else{
-                                result="Bad";
-                                gpu.setModelResults("Bad");
-                            }
-                        }
-                        else{
-                            if(prob<=8){
-                                result= "Good";
-                                gpu.setModelResults("Good");
-                            }
-                            else{
-                                result="Bad";
-                                gpu.setModelResults("Bad");
-                            }
-                        }
-                        gpu.getModel().setStatus(Model.Status.Tested);
-                       // complete(testModelEvent,result);
-
-                    });
+                    gpu.testModel(testModelEvent.getModel());
+                });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
-              gpu.setModelAndInitializeIndexCurrentData(c.getModel());
-              gpu.setModelStatus(Model.Status.Training);
-              gpu.setTrainModelEvent(c);
-                gpu.splitData();
-        });
+
+            gpu.train(c);
+                });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {
                 terminate();
+        });
+        subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)->{
+            gpu.trainDataBatch();
         });
     }
 }

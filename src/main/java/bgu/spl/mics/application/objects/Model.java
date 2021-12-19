@@ -8,7 +8,7 @@ public class Model {
    public enum Status {
         PreTrained, Training, Trained, Tested
     }
-    enum Results{
+    public enum Results{
         None, Good, Bad
     }
     private String name;
@@ -27,26 +27,19 @@ public class Model {
 
 
     }
-    public String getResults(){
-        if(results==Results.Good){
-        return "Good";
+    public boolean isDone(){
+        if(data.getSize() == data.getProcessed()){
+            return true;
         }
-            return "Bad";
+        return false;
     }
-    public String getStudentDegree(){
-        return student.getDegree();
-    }
-    public void setResults(String result){
-    if(result.compareTo("Good")==0){
-       results=Results.Good;
-    }
-    else{
-        results=Results.Bad;
-    }
+    public Results getResults(){
+        return results;
     }
     public void setResults(Results _results){
-        results = _results;
+        this.results = _results;
     }
+
     public Status getStatus(){
         return status;
     }

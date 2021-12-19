@@ -1,9 +1,7 @@
 package bgu.spl.mics.application.objects;
-import bgu.spl.mics.Event;
+import bgu.spl.mics.TrainModelEvent;
 
-import java.util.LinkedList;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive object representing a single GPU.
@@ -14,207 +12,143 @@ public class GPU {
     /**
      * Enum representing the type of the GPU.
      */
-    Event trainModelEvent;
 
     enum Type {RTX3090, RTX2080, GTX1080}
 
+    private TrainModelEvent currEvent;
     private Type type;
-    private Model model;//the model the gpu is currently working on
+    private Model currentModelToTrain;//the model the gpu is currently working on
     private Cluster cluster;
-    private int alreadyTrainedDataTime;
-    private int indexCurrentData;
-    private AtomicInteger memory;
+    private int tickCounter;
+    private int totalGPUTime;
     private Vector<DataBatch> dataToTrainVector;
+    private Vector<Model> modelToTrain;
+    private Vector<Model> modelToTest;
     private DataBatch currentDataToTrain;
     private int timeToTrainEachData;
-    private int time;
-    int beginningTime;
-    private boolean activeTrain;
-    private Vector<DataBatch> splitedDataVector;
+    private int timeToProccessData;
 
     //constructor
     public GPU(String _type) {
-        splitedDataVector = new Vector<DataBatch>();
-        trainModelEvent = null;
-        activeTrain = false;
         currentDataToTrain = null;
-        beginningTime = 1;
-        alreadyTrainedDataTime = 0;
-        model = null;
+        currentModelToTrain = null;
         cluster = cluster.getInstance();
-        indexCurrentData = 0;
         dataToTrainVector = new Vector<DataBatch>();
         if (_type.compareTo("RTX3090") == 0) {
+            dataToTrainVector.setSize(32);
             type = Type.RTX3090;
+            timeToProccessData = 1;
         } else if (_type.compareTo("RTX2080") == 0) {
+            dataToTrainVector.setSize(16);
             type = Type.RTX2080;
+            timeToProccessData = 2;
         } else {
+            dataToTrainVector.setSize(8);
             type = Type.GTX1080;
+            timeToProccessData = 4;
         }
-        if (_type.compareTo("RTX3090") == 0) {
-            memory = new AtomicInteger(32);
-            timeToTrainEachData = 1;
-        } else if (_type.compareTo("RTX2080") == 0) {
-            memory = new AtomicInteger(16);
-            timeToTrainEachData = 2;
-        } else {
-            memory = new AtomicInteger(8);
-            timeToTrainEachData = 4;
+        tickCounter = 0;
+        totalGPUTime = 0;
+        modelToTrain = new Vector<>();
+        modelToTest = new Vector<>();
+    }
+
+    //train
+    public void train(TrainModelEvent trainModelEvent){
+        if (currentModelToTrain == null){
+            currentModelToTrain = trainModelEvent.getModel();
+            currentModelToTrain.setStatus(Model.Status.Training);
+            for(int i=0;i<dataToTrainVector.size();i++){
+                cluster.processData(currentModelToTrain.getData().split(this));
+            }
         }
-        time = 1;
-    }
-//dataToTrainVector functions
-    public int getDataToTrainVectorSize(){
-        return dataToTrainVector.size();
-    }
-    //fuctions current data to train
-    public DataBatch getCurrentDataToTrain() {
-        return currentDataToTrain;
-    }
-
-    public void updateCurrentDataToTrain() {
-        try {
-            currentDataToTrain = dataToTrainVector.remove(0);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            currentDataToTrain = null;
-        }
-        ;
-    }
-
-    public void addDataToTrainToVector(DataBatch dataToTrain) { //if gpu busy add data to vector
-        dataToTrainVector.add(dataToTrain);
-    }
-
-    public void setCurrentDataToTrain(DataBatch current) {
-        currentDataToTrain = current;
-    }
-
-    //already trained data
-    public int getAlreadyTrainedDataTime() {
-        return alreadyTrainedDataTime;
-    }
-
-    public void updateAlreadyTrainedData() {
-        this.alreadyTrainedDataTime = alreadyTrainedDataTime + 1000;
-    }
-
-    //beginning time functions
-    public int getBeginningTime() {
-        return beginningTime;
-    }
-
-    public void setBeginningTime() {
-        this.beginningTime = time;
-    }
-
-    //active train function
-    public boolean getIsActiveTrain() {
-        return activeTrain;
-    }
-
-    public void setActiveTrain(boolean activeTrain) {
-        this.activeTrain = activeTrain;
-    }
-
-    //fuctions time to train each data culculate already in constructor
-    public int getTimeToTrainEachData() {
-        return timeToTrainEachData;
-    }
-
-    //functions time
-    public int getTime() {
-        return time;
-    }
-
-    public void updateTime() {
-        time = time + 1;
-    }
-
-    //index current data metods
-    public int getIndexCurrentData() {
-        return indexCurrentData;
-    }
-
-    public void updateIndexCurrentData() {
-        indexCurrentData = indexCurrentData + 1000;
-    }
-
-    //functions model
-    public Model getModel() {
-        return model;
-    }
-
-    public int getModelDataSize() {
-        return this.model.getData().getSize();
-    }
-
-    public void setModelAndInitializeIndexCurrentData(Model currentModel) { //set the model of the gpu to new model to work on.
-        model = currentModel;
-        indexCurrentData = 0;
-    }
-
-    public void setModelResults(String result) {
-        model.setResults(result);
-    }
-
-    public void setModelStatus(Model.Status status) {
-        model.setStatus(status);
-    }
-
-    //functions memory
-    public int getMemory() {
-        return memory.intValue();
-    }
-
-    public void incrementMemoryBy1() {
-        memory.incrementAndGet();
-    }
-
-    public void decreaseMemoryBy1() {
-        memory.decrementAndGet();
-    }
-
-    //functions model event
-    public void setTrainModelEvent(Event trainModelEvent) {
-        this.trainModelEvent = trainModelEvent;
-    }
-
-    public Event getTrainModelEvent() {
-        return trainModelEvent;
-    }
-
-
-    //split data function
-    public void splitData() {
-        while (getIndexCurrentData() < getModelDataSize()) {
-            int tempIndexCurrentData = indexCurrentData;
-            updateIndexCurrentData();
-            splitedDataVector.add(new DataBatch(model.getData(), tempIndexCurrentData, this));
-        }
-        if (!splitedDataVector.isEmpty()) {
-            cluster.processData(takeDataToTrainFromsplitedDataLinkedList());
+        else{
+            modelToTrain.add(trainModelEvent.getModel());
         }
     }
 
-    //student function
-    public String getStudentDegreeFromGPU() {
-        return model.getStudentDegree();
+    //check if finish training dataBatch
+    public void trainDataBatch() {
+        if (currentModelToTrain == null) {
+            if (!modelToTest.isEmpty()) {
+                testModel(modelToTest.remove(0));
+            }
+            if (!modelToTrain.isEmpty()) {
+                currentModelToTrain = modelToTrain.remove(0);
+                currentModelToTrain.setStatus(Model.Status.Training);
+                tickCounter = 0;
+            }
+            return;
+        }
+        if (currentModelToTrain.getStatus().equals(Model.Status.Training)){
+                if (currentDataToTrain != null) {
+                    tickCounter += 1;
+                    totalGPUTime += 1;
+                    if (tickCounter >= timeToProccessData) {
+                        currentModelToTrain.getData().setProcessed();
+                        tickCounter = 0;
+                        if (!dataToTrainVector.isEmpty()) {
+                            currentDataToTrain = dataToTrainVector.remove(0);
+                            if (!currentModelToTrain.isDone()) {
+                                cluster.processData(currentModelToTrain.getData().split(this));
+                                }
+                            }
+                            else{
+                                currentDataToTrain = null;
+                            }
+                        }
+                    }
+                else {
+                    if (!dataToTrainVector.isEmpty()) {
+                        currentDataToTrain = dataToTrainVector.remove(0);
+                    }
+                }
+            }
+         if(currentModelToTrain.getData().getProcessed() == currentModelToTrain.getData().getSize()){
+            currentModelToTrain.setStatus(Model.Status.Trained);
+            currentModelToTrain = null;
+            if(!modelToTest.isEmpty()){
+                testModel(modelToTest.remove(0));
+            }
+            if(!modelToTrain.isEmpty()){
+                currentModelToTrain = modelToTrain.remove(0);
+                currentModelToTrain.setStatus(Model.Status.Training);
+            }
+        }
     }
 
-    //is finish trained
-    public boolean getIsFinishedTrained() {
-        return (alreadyTrainedDataTime == getModelDataSize());
+    //test model
+    public void testModel(Model model) {
+        if(model == null){
+            return;
+        }
+        model.setStatus(Model.Status.Tested);
+        int range = 10 + 1;
+        int prob = (int) (Math.random() * range);
+        Student.Degree studentDegree = model.getStudent().getDegree();
+        if (studentDegree.equals(Student.Degree.MSc)) {
+            if (prob <= 6) {
+                model.setResults(Model.Results.Good);
+            } else {
+                model.setResults(Model.Results.Bad);
+            }
+        }
+        else {
+            if (prob <= 8) {
+                model.setResults(Model.Results.Good);
+            } else {
+                model.setResults(Model.Results.Bad);
+            }
+        }
+        if(!modelToTest.isEmpty()){
+            testModel(modelToTest.remove(0));
+        }
     }
 
-    //linkedlist splited data
-    public boolean splitedDataLinkedListIsEmpty() {
-        return splitedDataVector.isEmpty();
+    public void addDataBatchToTrain(DataBatch dataBatch){
+        dataToTrainVector.add(dataBatch);
     }
-    public DataBatch takeDataToTrainFromsplitedDataLinkedList() {
-            return splitedDataVector.remove(0);
-    }
-    //cluster
-    public Cluster getCluster(){
-        return cluster;
+    public int getTotalGPUTime(){
+        return totalGPUTime;
     }
 }
