@@ -33,9 +33,7 @@ public class TimeService extends MicroService{
 	@Override
 	protected void initialize() {
 		Timer timer = new Timer();
-
 		while (currentTime < duration){
-			//System.out.println(currentTime + " " + duration);
 			TimerTask task=new TimerTask() {
 				@Override
 				public void run() {
@@ -44,7 +42,6 @@ public class TimeService extends MicroService{
 				}
 			};
 			timer.schedule(task,tickTime);
-			//currentTime = currentTime +1;
 		}
 		timer.cancel();
 		sendBroadcast(new TerminateBroadcast());

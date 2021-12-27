@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class CRMSRunner {
     public static void main(String[] args){
-        String fileName = "./example_input.json";//Users/zivseker/Desktop/Projects/assignment2/example_input.json";  //";C://Users//nir42//Downloads/example_input.json
+        String fileName = args[0];
         Path path = Paths.get(fileName);
         Reader reader = null;
         Vector<Thread> threadVector=new Vector<>();
@@ -67,21 +67,18 @@ public class CRMSRunner {
             threadVector.add(gpuThread);
             cluster.addGPU(gpu);
             gpuThread.start();
-            //System.out.println("gpu thread id " + gpuThread.getId());
         }
         for(CPU cpu: cpuVector){
             CPUService cpuService=new CPUService("cpu",cpu, counterThreadToRun);
             Thread cpuThread=new Thread(cpuService);
             threadVector.add(cpuThread);
             cpuThread.start();
-            //System.out.println("cpu thread id " + cpuThread.getId());
         }
         for(ConfrenceInformation conf: confrenceInformationsVector){
             ConferenceService conferenceService=new ConferenceService(conf.getName(),conf,counterThreadToRun);
             Thread conferenceThread=new Thread(conferenceService);
             threadVector.add(conferenceThread);
             conferenceThread.start();
-            //System.out.println("conf thread ids " + conferenceThread.getId());
         }
 
         try{
@@ -117,7 +114,7 @@ public class CRMSRunner {
             Thread studentServiceThread = new Thread(studentService);
             threadVector.add(studentServiceThread);
             studentServiceThread.start();
-            //System.out.println("student thread " + studentServiceThread.getId());
+
         }
         try{
             studentCountDown.await();
@@ -163,10 +160,7 @@ public class CRMSRunner {
                 }
             }
         }
-//        for (Student student : studentsVector) {
-//            for (Model model: student.getModelVector())
-//                System.out.println(model.getName() + " " + model.getData().getProcessed() + " processed from " + model.getData().getSize());
-//        }
+
     }
     }
 

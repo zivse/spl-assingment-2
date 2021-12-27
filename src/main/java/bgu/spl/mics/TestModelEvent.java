@@ -2,7 +2,6 @@ package bgu.spl.mics;
 
 import bgu.spl.mics.application.objects.Model;
 
-import javax.jws.WebParam;
 
 public class TestModelEvent implements Event {
     private Future future;

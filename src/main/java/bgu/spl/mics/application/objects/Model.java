@@ -20,7 +20,6 @@ public class Model {
     public Model(String _name, Data _data,Student _student){ //check if delete student - Student _student
         name=_name;
         data=_data;
-        //size = _size;
         student=_student;
         status = Status.PreTrained;
         results = Results.None;

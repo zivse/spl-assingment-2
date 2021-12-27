@@ -5,22 +5,22 @@ publications0
 papersRead: 0
 trainedModels: 
 name: YOLO10
-data: type: Tabular
+data: type: Images
 size: 200000
 
 status: Tested
 results: Nonename: ResNet9000
-data: type: Tabular
+data: type: Images
 size: 200000
 
 status: Tested
 results: Nonename: LessEfficientNet
-data: type: Tabular
+data: type: Images
 size: 20000
 
 status: PreTrained
 results: Nonename: DensestNet
-data: type: Tabular
+data: type: Images
 size: 200000
 
 status: PreTrained
@@ -31,7 +31,7 @@ publications0
 papersRead: 0
 trainedModels: 
 name: VIT
-data: type: Tabular
+data: type: Images
 size: 100000000
 
 status: Training
@@ -45,12 +45,12 @@ name: Bert
 data: type: Text
 size: 1000000
 
-status: Tested
+status: Training
 results: Nonename: GPT4
 data: type: Text
 size: 1000000
 
-status: Tested
+status: PreTrained
 results: Nonename: GPT5
 data: type: Text
 size: 200000
@@ -63,7 +63,7 @@ size: 50000
 status: PreTrained
 results: None, name: Timon
 department: SE
-status: PhD
+status: MSc
 publications0
 papersRead: 0
 trainedModels: 
@@ -94,43 +94,43 @@ publications0
 papersRead: 0
 trainedModels: 
 name: YOLO9000
-data: type: Tabular
+data: type: Images
 size: 100000
 
 status: Tested
 results: Nonename: VIT2
-data: type: Tabular
+data: type: Images
 size: 1000000
 
 status: PreTrained
 results: Nonename: MuchMoreEfficientNet
-data: type: Tabular
+data: type: Images
 size: 20000
 
 status: PreTrained
 results: Nonename: DenserNet
-data: type: Tabular
+data: type: Images
 size: 100000
 
 status: PreTrained
 results: None][conferences: 
 name: ICML
-date2000
+date20000
 publications
 {}, conferences: 
 name: NeurIPS
-date2500
+date25000
 publications
 {}, conferences: 
 name: CVPR
-date3000
+date30000
 publications
 {}, conferences: 
 name: ECCV
-date4000
+date40000
 publications
 {}, conferences: 
 name: AISTATS
-date5000
+date50000
 publications
-{}]total cpu 57449total gpu 59601total batches 57445
+{}]total cpu 7768total gpu 9588total batches 7731
