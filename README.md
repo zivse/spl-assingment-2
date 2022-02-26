@@ -1,4 +1,4 @@
-Assignment 2 in the course Systems Programming in BGU, graded 100.
+Assignment 2 in the course Systems Programming in BGU, graded 98.
 
 In this assignment we were tasked with creating a program to immitate usage of a centralized processing pool: A University has servers that can process data and train machine learning models (theoretically), and users (students) can request to train and test their models using the university's resources.
 
