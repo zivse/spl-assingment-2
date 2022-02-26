@@ -23,7 +23,7 @@ public class CPUService extends MicroService {
     }
     @Override
     protected void initialize() {
-        subscribeBroadcast( TickBroadcast.class,(TickBroadcast broadcast) -> {
+        subscribeBroadcast(TickBroadcast.class,(TickBroadcast broadcast) -> {
             cpu.processData();
         }) ;
         subscribeBroadcast(TerminateBroadcast.class, (TerminateBroadcast c)-> {

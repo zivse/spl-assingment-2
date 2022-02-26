@@ -13,7 +13,7 @@ results: Nonename: ResNet9000
 data: type: Images
 size: 200000
 
-status: Tested
+status: PreTrained
 results: Nonename: LessEfficientNet
 data: type: Images
 size: 20000
@@ -102,7 +102,7 @@ results: Nonename: VIT2
 data: type: Images
 size: 1000000
 
-status: PreTrained
+status: Tested
 results: Nonename: MuchMoreEfficientNet
 data: type: Images
 size: 20000
@@ -113,24 +113,4 @@ data: type: Images
 size: 100000
 
 status: PreTrained
-results: None][conferences: 
-name: ICML
-date20000
-publications
-{}, conferences: 
-name: NeurIPS
-date25000
-publications
-{}, conferences: 
-name: CVPR
-date30000
-publications
-{}, conferences: 
-name: ECCV
-date40000
-publications
-{}, conferences: 
-name: AISTATS
-date50000
-publications
-{}]total cpu 7768total gpu 9588total batches 7731
+results: None]total cpu 6140total gpu 6266total batches 6103

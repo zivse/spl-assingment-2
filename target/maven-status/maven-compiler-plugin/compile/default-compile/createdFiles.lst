@@ -14,12 +14,10 @@ bgu/spl/mics/MessageBus.class
 bgu/spl/mics/application/objects/Model.class
 bgu/spl/mics/application/services/StudentService.class
 bgu/spl/mics/Message.class
-bgu/spl/mics/application/services/ConferenceService.class
 bgu/spl/mics/application/CRMSRunner.class
 bgu/spl/mics/application/objects/Data.class
 bgu/spl/mics/TickBroadcast.class
 bgu/spl/mics/application/objects/GPU.class
-bgu/spl/mics/PublishConferenceBroadcast.class
 bgu/spl/mics/Broadcast.class
 bgu/spl/mics/application/objects/GPU$Type.class
 bgu/spl/mics/application/objects/Model$Status.class
@@ -38,6 +36,4 @@ bgu/spl/mics/example/services/ExampleEventHandlerService.class
 bgu/spl/mics/application/services/CPUService.class
 bgu/spl/mics/example/services/ExampleBroadcastListenerService.class
 bgu/spl/mics/application/objects/CPU.class
-bgu/spl/mics/PublishResultsEvent.class
 bgu/spl/mics/TrainModelEvent.class
-bgu/spl/mics/application/objects/ConfrenceInformation.class

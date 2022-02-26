@@ -16,7 +16,7 @@ public class Model {
     private Student student;
     private Status status;
     private Results results;
-    // private int size;
+
     public Model(String _name, Data _data,Student _student){ //check if delete student - Student _student
         name=_name;
         data=_data;

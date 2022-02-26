@@ -58,7 +58,7 @@ public class GPU {
         if (currentModelToTrain == null){
             currentModelToTrain = trainModelEvent.getModel();
             currentModelToTrain.setStatus(Model.Status.Training);
-            for(int i=0;i<dataToTrainVector.size();i++){
+            for(int i=0;i<dataToTrainVector.size();i++){//split the data
                 cluster.processData(currentModelToTrain.getData().split(this));
             }
         }

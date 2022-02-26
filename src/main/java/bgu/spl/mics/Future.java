@@ -31,7 +31,7 @@ public class Future<T> {
      * @pre none
 	 * @post none
      */
-	public T get()  { //check the meaning
+	public T get()  {
 		while (fResult == null)
 			synchronized(lock) {
 				try {

@@ -18,8 +18,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class CRMSRunner {
     public static void main(String[] args){
-        String fileName = args[0];
-        Path path = Paths.get(fileName);
+        Path path = Paths.get("example_input-3.json");
         Reader reader = null;
         Vector<Thread> threadVector=new Vector<>();
         try{
@@ -38,8 +37,6 @@ public class CRMSRunner {
         for (JsonElement gpu : GPUArray){
             GPU Gpu = new GPU(gpu.getAsString());
             gpuVector.add(Gpu);
-
-
         }
 
         JsonArray CPUArray = object.get("CPUS").getAsJsonArray();
@@ -49,17 +46,8 @@ public class CRMSRunner {
             cpuVector.add(Cpu);
         }
         cluster.addCPU(cpuVector);
-//conference
-        JsonArray ConferencesArray = object.get("Conferences").getAsJsonArray();
-        Vector<ConfrenceInformation> confrenceInformationsVector = new Vector<>();
-        for(JsonElement conference : ConferencesArray){
-            JsonObject conferenceObject = conference.getAsJsonObject();
-            String conferenceName = conferenceObject.get("name").getAsString();
-            int  conferenceDate = conferenceObject.get("date").getAsInt();
-            ConfrenceInformation tempConf = new ConfrenceInformation(conferenceName, conferenceDate);
-            confrenceInformationsVector.add(tempConf);
-        }
-        int counterThreads = cpuVector.size() + confrenceInformationsVector.size() + gpuVector.size();
+
+         int counterThreads = cpuVector.size() + gpuVector.size();
         CountDownLatch counterThreadToRun = new CountDownLatch(counterThreads);
         for(GPU gpu: gpuVector){
             GPUService gpuService = new GPUService("gpu", gpu,counterThreadToRun );
@@ -73,12 +61,6 @@ public class CRMSRunner {
             Thread cpuThread=new Thread(cpuService);
             threadVector.add(cpuThread);
             cpuThread.start();
-        }
-        for(ConfrenceInformation conf: confrenceInformationsVector){
-            ConferenceService conferenceService=new ConferenceService(conf.getName(),conf,counterThreadToRun);
-            Thread conferenceThread=new Thread(conferenceService);
-            threadVector.add(conferenceThread);
-            conferenceThread.start();
         }
 
         try{
@@ -142,7 +124,6 @@ public class CRMSRunner {
         try {
             fileWriter = new FileWriter("Output.txt");
             fileWriter.write(studentsVector.toString());
-            fileWriter.write(confrenceInformationsVector.toString());
             fileWriter.write("total cpu " + totalCpu);
             fileWriter.write("total gpu " + totalGpu);
             fileWriter.write("total batches " + cluster.getBatches());

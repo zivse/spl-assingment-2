@@ -17,7 +17,7 @@ public class Data {
     private int size;
     private int index;
 
-    public Data(String _type, int _size){ //fix all gpu related
+    public Data(String _type, int _size){
         if(_type.compareTo("Text")==0){
             type = type.Text;
         }

@@ -22,7 +22,6 @@ import java.util.concurrent.CountDownLatch;
  * <p>
  */
 public abstract class MicroService implements Runnable {
-
     private boolean terminated = false;
     private final String name;
     private HashMap <Class<? extends Message>,Callback> connectCallToEventHashMap; //this way we can take the call function and use it in run after the subscribe happen.
@@ -152,7 +151,7 @@ public abstract class MicroService implements Runnable {
     }
 
     /**
-     * The entry point of the micro-service. TODO: you must complete this code
+     * The entry point of the micro-service.
      * otherwise you will end up in an infinite loop.
      */
     @Override
@@ -166,7 +165,6 @@ public abstract class MicroService implements Runnable {
             try {
                Message event= bus.awaitMessage(this);
                 Callback function= connectCallToEventHashMap.get(event.getClass());
-                //System.out.println("micro service run "+event.toString());
                 function.call(event);
             }
             catch (InterruptedException e) {

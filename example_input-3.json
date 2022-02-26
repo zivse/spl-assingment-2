@@ -134,14 +134,7 @@
     ],
     "GPUS": ["RTX3090","RTX3090","RTX2080","GTX1080"],
     "CPUS": [32,32,32,16,16,16,16],
-    "Conferences":
-    [
-        {"name": "ICML", "date": 20000},
-        {"name": "NeurIPS", "date": 25000},
-        {"name": "CVPR", "date": 30000},
-        {"name": "ECCV", "date": 40000},
-        {"name": "AISTATS", "date": 50000}
-    ],
+
     "TickTime": 1,
     "Duration": 55000
 }

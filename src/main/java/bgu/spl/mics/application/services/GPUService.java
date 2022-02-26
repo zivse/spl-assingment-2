@@ -30,7 +30,6 @@ private GPU gpu;
                     gpu.testModel(testModelEvent.getModel());
                 });
         subscribeEvent(TrainModelEvent.class, (TrainModelEvent c)-> {
-
             gpu.train(c);
                 });
         subscribeBroadcast(TerminateBroadcast.class,(TerminateBroadcast c)-> {

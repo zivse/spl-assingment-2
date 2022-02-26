@@ -29,8 +29,6 @@ public MessageBusImpl(){
 	microServices=new ConcurrentHashMap<Class<? extends Message>,Vector<MicroService>>();
 	microServices.put(TrainModelEvent.class,new Vector<MicroService>());
 	microServices.put(TestModelEvent.class,new Vector<MicroService>());
-	microServices.put(PublishResultsEvent.class,new Vector<MicroService>());
-	microServices.put(PublishConferenceBroadcast.class,new Vector<MicroService>());
 	microServices.put(TickBroadcast.class,new Vector<MicroService>());
 	microServices.put(TerminateBroadcast.class,new Vector<MicroService>());
 	futures=new ConcurrentHashMap<Message, Future>();
@@ -58,7 +56,6 @@ public static MessageBusImpl getInstance() {
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-//		System.out.println("complete in message bus"+e);
 		synchronized(futures) {
 			e.getFuture().resolve(result);
 		}

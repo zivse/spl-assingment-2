@@ -10,9 +10,6 @@
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/objects/CPU.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/CRMSRunner.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/objects/Model.java
-/Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/PublishConferenceBroadcast.java
-/Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/objects/ConfrenceInformation.java
-/Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/services/ConferenceService.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/objects/Cluster.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/Callback.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/example/services/ExampleBroadcastListenerService.java
@@ -32,4 +29,3 @@
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/example/messages/ExampleBroadcast.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/services/TimeService.java
 /Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/application/objects/DataBatch.java
-/Users/zivseker/Desktop/Projects/assignment2/src/main/java/bgu/spl/mics/PublishResultsEvent.java

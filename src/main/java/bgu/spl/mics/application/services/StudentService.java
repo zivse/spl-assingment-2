@@ -8,7 +8,6 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
- * {@link TestModelEvent} and {@link PublishResultsEvent}.
  * In addition, it must sign up for the conference publication broadcasts.
  * This class may not hold references for objects which it is not responsible for.
  *
@@ -31,17 +30,6 @@ public class StudentService extends MicroService {
     @Override
     protected void initialize() {
         currentModel=student.getModelVector().get(0);
-        subscribeBroadcast(PublishConferenceBroadcast.class,(PublishConferenceBroadcast event)->{
-        if(event.getConnectStudentToArticles().get(student)==null){
-            student.setPapersRead(event.getTotalPublishers());
-        }
-        else{
-            Vector<String> models=event.getConnectStudentToArticles().get(student);
-            int modelsSize=models.size();
-            student.setPublications(modelsSize);
-            student.setPapersRead(event.getTotalPublishers()-modelsSize);
-        }
-        });
         subscribeBroadcast(TickBroadcast.class, (TickBroadcast c)-> {
             if(indexModel<student.getModelVector().size()) {
                 if (currentModel.getStatus() == Model.Status.PreTrained && currentEvent == 0) {
@@ -58,10 +46,6 @@ public class StudentService extends MicroService {
                 else if(currentModel.getStatus() == Model.Status.Tested && currentEvent == 2){
                     currentEvent = 0;
                     indexModel = indexModel + 1;
-                    if (currentModel.getResults() == Model.Results.Good) {
-                        PublishResultsEvent ePublish = new PublishResultsEvent(currentModel);
-                        ePublish.setFuture(sendEvent(ePublish));
-                    }
                     if(indexModel<student.getModelVector().size()){
                     currentModel = student.getModelVector().get(indexModel);
                      }
